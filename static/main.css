@@ -89,6 +89,18 @@ $primary-font-color: #ffffff;*/
 .dash {
     height: calc(100% - 95px);
 }
+.left-sidebar {
+    height: 100%;
+}
+.view {
+    height: 100%;
+}
+.widget {
+    height: 100%;
+}
+.widget-body {
+    height: calc(100% - 61px);
+}
 .clearfix {
   *zoom: 1; }
   .clearfix:before {
@@ -2026,17 +2038,17 @@ button.btn.btn-mini, input[type="submit"].btn.btn-mini {
     color: #333333;
     text-decoration: none; }
 
-[class^="icon-"], [class*=" icon-"] {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  *margin-right: .3em;
-  line-height: 14px;
-  vertical-align: text-top;
-  background-image: url("../img/glyphicons-halflings.png");
-  background-position: 14px 14px;
-  background-repeat: no-repeat;
-  margin-top: 1px; }
+/*[class^="icon-"], [class*=" icon-"] {*/
+  /*display: inline-block;*/
+  /*width: 14px;*/
+  /*height: 14px;*/
+  /**margin-right: .3em;*/
+  /*line-height: 14px;*/
+  /*vertical-align: text-top;*/
+  /*background-image: url("../img/glyphicons-halflings.png");*/
+  /*background-position: 14px 14px;*/
+  /*background-repeat: no-repeat;*/
+  /*margin-top: 1px; }*/
 
 /* White icons with optional class, or on hover/active states of certain elements */
 .icon-white {
@@ -2408,9 +2420,9 @@ button.btn.btn-mini, input[type="submit"].btn.btn-mini {
 .icon-folder-close {
   background-position: -384px -120px; }
 
-.icon-folder-open {
-  background-position: -408px -120px;
-  width: 16px; }
+/*.icon-folder-open {*/
+  /*background-position: -408px -120px;*/
+  /*width: 16px; }*/
 
 .icon-resize-vertical {
   background-position: -432px -119px; }
@@ -5531,8 +5543,7 @@ header {
         opacity: 0.5; }
     .sub-nav li:last-of-type {
       border-right: none; }
-    .sub-nav li:first-of-type {
-      border-right: none; }
+
     .sub-nav li .selected {
       color: black; }
     .sub-nav li .heading {

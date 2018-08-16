@@ -5,7 +5,7 @@
                 <div class="widget">
                     <div class="widget-header">
                         <div class="title">
-                            分布式存储
+                            光盘库存储
                         </div>
                         <span class="tools">
                           <a class="fs1 icon-arrow-up-right" aria-hidden="true"></a>
@@ -103,7 +103,7 @@
 
 <script>
     export default {
-        name: "Distributed",
+        name: "DiskLibrary",
         data(){
             return{
                 show1:1,
@@ -510,7 +510,6 @@
         overflow: hidden;
         background: #f7f7f7;
     }
-
     .widget-body-lf{
         float: left;
         width: 49.5%;
