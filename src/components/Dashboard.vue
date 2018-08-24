@@ -13,6 +13,8 @@
                             </div>
                         </div>
                         <div class="widget-body">
+
+                            <img src="../assets/img/fuwuqi.gif"/>
                         </div>
                     </div>
                 </div>
@@ -26,6 +28,7 @@
                         </div>
                         <div class="widget-body">
                             <div class="metro-nav">
+                                <div class="metro-nav-wrap">
                                 <div class="metro-nav-block nav-block-blue">
                                     <div class="nav-img">
                                         图标
@@ -62,7 +65,6 @@
                                         <div>新增项目</div>
                                     </div>
                                 </div>
-
                                 <div class="metro-nav-block nav-block-brown">
                                     <div class="nav-img">
                                         图标
@@ -81,20 +83,23 @@
                                         <div>系统警告</div>
                                     </div>
                                 </div>
+                                </div>
                             </div>
-                            <div>
-                                <div class="status-charts"></div>
+                            <div class="widget-body-bt">
+                                <div class="status-charts">
+                                    <div id="pie"></div>
+                                </div>
                                 <div class="status-form">
                                     <table class="table table-condensed table-striped table-bordered table-hover no-margin">
                                         <thead>
-                                        <tr>
-                                            <th class="hidden-phone">
-                                                设备名称
-                                            </th>
-                                            <th class="hidden-phone">
-                                                设备状态
-                                            </th>
-                                        </tr>
+                                            <tr>
+                                                <th class="hidden-phone">
+                                                    设备名称
+                                                </th>
+                                                <th class="hidden-phone">
+                                                    设备状态
+                                                </th>
+                                            </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
@@ -127,7 +132,6 @@
                                                     </span>
                                                 </td>
                                             </tr>
-
                                         </tbody>
                                     </table>
                                 </div>
@@ -142,7 +146,60 @@
 
 <script>
     export default {
-        name: "Dashboard"
+        name: "Dashboard",
+        data(){
+            return{
+
+            }
+        },
+        mounted(){
+            this.drawpie();
+        },
+        methods:{
+            drawpie(){
+                let pie = this.$echarts.init(document.getElementById('pie'));
+                let option = {
+                    series:[
+                        {
+                            type:'pie',
+                            radius:['15%','60%'],
+                            color:['#57cbe4','#b0c6de','#4c6de1'],
+                            label:{
+                                show:false
+                            },
+                            data:[
+                                {
+                                    name:'分布式存储',
+                                    value:1,
+                                },
+                                {
+                                    name:'光盘库存储',
+                                    value:1
+                                },
+                                {
+                                    name:'磁带库存储',
+                                    value:1
+                                },
+                            ]
+                        }
+                    ],
+                    legend:{
+                        orient:'vertical',
+                        left:0
+                    },
+
+                    tooltip:{
+                        formatter:'{b}</br> 总容量5T可用容量3T'
+                    }
+                };
+
+                pie.setOption(option);
+                window.onresize = function() {
+                    pie.resize();
+                }
+            },
+
+        }
     }
 </script>
 
@@ -158,13 +215,25 @@
     }
     .widget-body {
         height: calc(100% - 61px);
+        position: relative;
+    }
+    .widget-body img {
+        width: 85%;
+        max-height: 100%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
     }
     .metro-nav {
         overflow: hidden;
         width: 80%;
+        height: 40%;
         margin: 0 auto;
+        position:  relative;
     }
-    .metro-nav-block{
+
+    .metro-nav-block {
         display: flex;
         align-items: center;
     }
@@ -183,12 +252,18 @@
     .status-charts {
         float: left;
         width: 60%;
+        height: 100%;
     }
     .status-form {
         float: right;
         position: relative;
         width: 40%;
-        height: 45vh;
+        height: 100%;
+    }
+    .widget-body-bt {
+        height: 60%;
+        width: 80%;
+        margin: 0 auto;
     }
     table {
         position: absolute;
@@ -201,5 +276,19 @@
     td {
         text-align: center;
     }
+    #pie {
+        width: 100%;
+        height: 100%;
+    }
+    .nav-block-purple,.nav-block-red{
+        margin-right: 0;
+    }
+    .metro-nav-wrap {
+        width: 100%;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
 
 </style>
