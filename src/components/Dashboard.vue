@@ -13,7 +13,6 @@
                             </div>
                         </div>
                         <div class="widget-body">
-
                             <img src="../assets/img/fuwuqi.gif"/>
                         </div>
                     </div>
@@ -34,7 +33,7 @@
                                         图标
                                     </div>
                                     <div class="nav-msg">
-                                        <div><span>25</span>个</div>
+                                        <div><span>{{data.task}}</span>个</div>
                                         <div>今日总任务</div>
                                     </div>
                                 </div>
@@ -43,7 +42,7 @@
                                         图标
                                     </div>
                                     <div class="nav-msg">
-                                        <div><span>25</span>个</div>
+                                        <div><span>{{data.running}}</span>个</div>
                                         <div>进行中</div>
                                     </div>
                                 </div>
@@ -149,6 +148,33 @@
         name: "Dashboard",
         data(){
             return{
+                data:{
+                    "task": 1,           //今日总任务
+                    "running": 1,       //运行中
+                    "completed": 1,    //已完成
+                    "added": 1,       //新增条目
+                    "distributedUsed": 1, //分布式已使用空间
+                    "tapeUsed": 1,      //磁带库已使用空间
+                    "diskUsed": 1, //光盘库已使用空间
+                    "warning": 1     //警告数
+                },
+                devices:[
+                    {
+                        "devType": "distributed",  //分布式
+                        "data":[
+                            {						//分布式存储需返回各个存储池内存使用情况
+                                "poolName": "xx",
+                                "capacity": 20.34,
+                                "usedCapacity": 15.4,
+                            },
+                        ]
+                    },
+                    {
+                        "devType": "tape",           //磁带库
+                        "capacity": 100,
+                        "usedCapacity": 19.3,
+                    }
+                ]
 
             }
         },
@@ -158,6 +184,7 @@
         methods:{
             drawpie(){
                 let pie = this.$echarts.init(document.getElementById('pie'));
+                let that = this;
                 let option = {
                     series:[
                         {
@@ -167,30 +194,41 @@
                             label:{
                                 show:false
                             },
+                            trigger:'item',
                             data:[
                                 {
                                     name:'分布式存储',
                                     value:1,
+                                    tooltip:{
+                                        formatter:'{b}</br> 总容量' + that.devices[0].data[0].capacity +'可用容量3T'
+                                    }
                                 },
                                 {
                                     name:'光盘库存储',
-                                    value:1
+                                    value:1,
+                                    tooltip:{
+                                        formatter:'{b}</br> 总容量' + that.devices[1].capacity +'可用容量3T'
+                                    }
                                 },
                                 {
                                     name:'磁带库存储',
-                                    value:1
+                                    value:1,
+                                    // tooltip:{
+                                    //     formatter:'{b}</br> 总容量' + that.devices[0].data[0].capacity +'可用容量3T'
+                                    // }
                                 },
-                            ]
+                            ],
+
                         }
                     ],
                     legend:{
                         orient:'vertical',
                         left:0
                     },
-
                     tooltip:{
-                        formatter:'{b}</br> 总容量5T可用容量3T'
+                        // formatter:'{b}</br> 总容量' + that.devices[0].data[0].capacity +'可用容量3T'
                     }
+
                 };
 
                 pie.setOption(option);

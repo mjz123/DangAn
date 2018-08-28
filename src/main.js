@@ -8,7 +8,9 @@ import jquery from 'jquery'
 import 'bootstrap/dist/js/bootstrap.min.js'
 import echarts from 'echarts'
 
+import { Tree } from 'element-ui'
 
+Vue.use(Tree);
 
 Vue.prototype.$echarts = echarts;
 

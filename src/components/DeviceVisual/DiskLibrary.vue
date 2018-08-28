@@ -293,6 +293,7 @@
                         }
                     ],
                     grid:{
+                        top:'100%',
                         containLabel:true
                     }
                 };
@@ -385,6 +386,7 @@
                         }
                     ],
                     grid:{
+                        top:'100%',
                         containLabel:true
                     }
                 };
@@ -474,6 +476,7 @@
                         }
                     ],
                     grid:{
+                        top:'100%',
                         containLabel:true
                     }
                 };
