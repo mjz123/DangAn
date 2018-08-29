@@ -162,12 +162,22 @@
                     {
                         "devType": "distributed",  //分布式
                         "data":[
-                            {						//分布式存储需返回各个存储池内存使用情况
+                            {
                                 "poolName": "xx",
                                 "capacity": 20.34,
                                 "usedCapacity": 15.4,
                             },
+                            {
+                                "poolName": "yy",
+                                "capacity": 20,
+                                "usedCapacity": 15.4,
+                            },
                         ]
+                    },
+                    {
+                        "devType": "tape",           //磁带库
+                        "capacity": 100,
+                        "usedCapacity": 19.3,
                     },
                     {
                         "devType": "tape",           //磁带库
@@ -182,6 +192,10 @@
             this.drawpie();
         },
         methods:{
+
+            //
+            //
+            // 饼图
             drawpie(){
                 let pie = this.$echarts.init(document.getElementById('pie'));
                 let that = this;
@@ -200,22 +214,29 @@
                                     name:'分布式存储',
                                     value:1,
                                     tooltip:{
-                                        formatter:'{b}</br> 总容量' + that.devices[0].data[0].capacity +'可用容量3T'
+                                        // formatter:'{b}</br> 总容量' + that.devices[0].data[0].capacity +'可用容量3T'
+                                        formatter:function (params) {
+                                            let res = params.name + '<br/>';
+                                            for (let i=0; i<that.devices[0].data.length; i++){
+                                                res += that.devices[0].data[i].poolName + '总容量'+ that.devices[0].data[i].capacity + '可用容量' + that.devices[0].data[i].usedCapacity + '<br/>';
+                                            }
+                                            return res;
+                                        }
                                     }
                                 },
                                 {
                                     name:'光盘库存储',
                                     value:1,
                                     tooltip:{
-                                        formatter:'{b}</br> 总容量' + that.devices[1].capacity +'可用容量3T'
+                                        formatter:'{b}</br> 总容量' + that.devices[1].capacity +'可用容量' + that.devices[1].usedCapacity
                                     }
                                 },
                                 {
                                     name:'磁带库存储',
                                     value:1,
-                                    // tooltip:{
-                                    //     formatter:'{b}</br> 总容量' + that.devices[0].data[0].capacity +'可用容量3T'
-                                    // }
+                                    tooltip:{
+                                        formatter:'{b}</br> 总容量' + that.devices[2].capacity +'可用容量' + that.devices[1].usedCapacity
+                                    }
                                 },
                             ],
 

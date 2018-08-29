@@ -16,18 +16,18 @@
                             <div class="msg" v-show=show1>
                                 <div>
                                     <h4>存储集群</h4>
-                                    <p>主机数量：3</p>
-                                    <p>主机状态：正常</p>
+                                    <p>主机数量：{{colonyMsg.colonyCount}}</p>
+                                    <p>主机状态：{{colonyMsg.status | status}}</p>
                                 </div>
                             </div>
                             <div class="msg" v-show=!show1>
                                 <div>
                                     <h4>存储集群</h4>
-                                    <p>主机名称：node1</p>
-                                    <p>CPU信息：飞腾，2个</p>
-                                    <p>内存信息：3.73G</p>
-                                    <p>硬盘信息：10块</p>
-                                    <p>在线状态：在线</p>
+                                    <p>主机名称：{{host[0].name}}</p>
+                                    <p>CPU信息：{{host[0].cpuType}}，{{host[0].cpuCount}}个</p>
+                                    <p>内存信息：{{host[0].memCapacity}}</p>
+                                    <p>硬盘信息：{{host[0].hardDiskCount}}块</p>
+                                    <p>在线状态：{{host[0].status | status}}</p>
                                 </div>
                             </div>
                             <div id="pie1"></div>
@@ -42,19 +42,19 @@
                         <div class="widget-body-lf">
                             <div class="msg" v-show=show2>
                                 <div>
-                                    <h4>存储集群</h4>
-                                    <p>主机数量：3</p>
-                                    <p>主机状态：正常</p>
+                                    <h4>存储池状态</h4>
+                                    <p>存储池数量：{{poolMsg.poolCount}}</p>
+                                    <p>在线状态：{{poolMsg.status | status}}</p>
                                 </div>
                             </div>
                             <div class="msg" v-show=!show2>
                                 <div>
                                     <h4>存储集群</h4>
-                                    <p>主机名称：node1</p>
-                                    <p>CPU信息：飞腾，2个</p>
-                                    <p>内存信息：3.73G</p>
-                                    <p>硬盘信息：10块</p>
-                                    <p>在线状态：在线</p>
+                                    <p>存储池名称：{{pool[0].name}}</p>
+                                    <p>存储池容量：{{pool[0].capacity}}</p>
+                                    <p>已用容量：{{pool[0].used}}</p>
+                                    <p>未用容量：{{pool[0].free}}</p>
+                                    <p>在线状态：{{pool[0].status | status}}</p>
                                 </div>
                             </div>
                             <div id="pie2"></div>
@@ -63,36 +63,32 @@
                         <div class="widget-body-rg">
                             <table class="table table-condensed table-striped table-bordered table-hover no-margin">
                                 <thead>
-                                <tr>
-                                    <th>
-                                        序号
-                                    </th>
-                                    <th>
-                                        磁盘名称
-                                    </th>
-                                    <th>
-                                        状态
-                                    </th>
-
-                                </tr>
+                                    <tr>
+                                        <th>
+                                            序号
+                                        </th>
+                                        <th>
+                                            磁盘名称
+                                        </th>
+                                        <th>
+                                            状态
+                                        </th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>
-                                       1
-                                    </td>
-                                    <td>
-                                        node01
-                                    </td>
-                                    <td>
-                                        在线
-                                    </td>
-                                </tr>
-
-
+                                    <tr>
+                                        <td>
+                                           1
+                                        </td>
+                                        <td>
+                                            node01
+                                        </td>
+                                        <td>
+                                            在线
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
-
                         </div>
                     </div>
                 </div>
@@ -107,7 +103,62 @@
         data(){
             return{
                 show1:1,
-                show2:1
+                show2:1,
+                // colonyCount: 3,
+                // colony: [{
+                //     "id": 1,
+                //     "name": "xx",
+                //     "status": 1   //1在线 0离线
+                // },
+                // {
+                //     "id": 2,
+                //     "name": "yy",
+                //     "status": 0   //1在线 0离线
+                // }],
+                colonyMsg:{
+                    colonyCount: 3,
+                    status: 1,    //1在线 0离线
+                    colony: [{
+                        "id": 1,
+                        "name": "xx",
+                        // "status": 1||0    //1在线 0离线
+                    },
+                        {
+                            "id": 2,
+                            "name": "yy",
+                            // "status": 1||0    //1在线 0离线
+                        }]
+                },
+
+                host: [{
+                    "name": "node01",
+                    "cpuType": "phytium",
+                    "cpuCount": 2,
+                    "memCapacity": 3.74,
+                    "hardDiskCount": 3,
+                    "status": 1
+                }],
+                poolMsg:{
+                    "poolCount": 3,
+                    "status": 0,  //1在线 0离线
+                    "poolName": [
+                        {
+                            "name": "长期保存库",
+                            "id": 1,
+                        },
+                        {
+                            "name": "短期保存库",
+                            "id": 2,
+                        },
+                    ]
+                },
+                pool: [{
+                    "name": "长期保存库",
+                    "capacity": 5,
+                    "used": 2,
+                    "free": 3,
+                    "status": 1   //1在线 0离线
+                }]
             }
         },
         mounted(){
@@ -121,6 +172,10 @@
         methods:{
             drawpie1(){
                 const that = this;
+                this.colonyMsg.colony.forEach((item,index) => {
+                    this.colonyMsg.colony[index].value = 1;
+                });
+
                 let pie1 = this.$echarts.init(document.getElementById('pie1'));
 
                 let option1 = {
@@ -132,20 +187,7 @@
                             label:{
                                 show:false
                             },
-                            data:[
-                                {
-                                    name:'node 01',
-                                    value:1,
-                                },
-                                {
-                                    name:'node 02',
-                                    value:1
-                                },
-                                {
-                                    name:'node 03',
-                                    value:1
-                                },
-                            ]
+                            data:that.colonyMsg.colony
                         }
                     ],
 
@@ -156,17 +198,22 @@
 
                 pie1.setOption(option1);
 
-                pie1.on('click', function (params) {
-                    if(params.name === 'node 01'){
-                        console.log(1);
-                        that.show1 = !that.show1;
-                    }
+                //点击饼图显示对应主机信息
+                this.colonyMsg.colony.forEach( item => {
+                    pie1.on('click', function (params) {
+                        if(params.name === item.name ){
+                            that.show1 = !that.show1;
+                        }
+                    });
                 });
-
             },
 
             drawpie2(){
                 const that = this;
+                this.poolMsg.poolName.forEach((item,index) => {
+                    this.poolMsg.poolName[index].value = 1;
+                });
+
                 let pie2 = this.$echarts.init(document.getElementById('pie2'));
 
                 let option2 = {
@@ -174,39 +221,27 @@
                         {
                             type:'pie',
                             radius:['35%','60%'],
-                            color: ['#dd6b66','#759aa0','#e69d87','#8dc1a9','#ea7e53','#eedd78'],
+                            // color: ['#dd6b66','#759aa0','#e69d87','#8dc1a9','#ea7e53','#eedd78'],
                             label:{
                                 show:false
                             },
-                            data:[
-                                {
-                                    name:'node 01',
-                                    value:1,
-                                },
-                                {
-                                    name:'node 02',
-                                    value:1
-                                },
-                                {
-                                    name:'node 03',
-                                    value:1
-                                },
-                            ]
+                            data:that.poolMsg.poolName
                         }
                     ],
 
                     tooltip:{
-                        formatter:'主机名:{b}'
+                        formatter:'存储池名称:{b}'
                     }
                 };
 
                 pie2.setOption(option2);
 
-                pie2.on('click', function (params) {
-                    if(params.name === 'node 01'){
-                        console.log(1);
-                        that.show2 = !that.show2;
-                    }
+                this.poolMsg.poolName.forEach( item => {
+                    pie2.on('click', function (params) {
+                        if(params.name === item.name ){
+                            that.show2 = !that.show2;
+                        }
+                    });
                 });
 
             },
@@ -503,6 +538,15 @@
                 }
             }
 
+        },
+        filters:{
+            status(value){
+                if (value == 1) {
+                    return "在线"
+                } else {
+                    return "离线"
+                }
+            }
         }
     }
 
