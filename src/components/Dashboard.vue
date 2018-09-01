@@ -28,60 +28,60 @@
                         <div class="widget-body">
                             <div class="metro-nav">
                                 <div class="metro-nav-wrap">
-                                <div class="metro-nav-block nav-block-blue">
-                                    <div class="nav-img">
-                                        图标
+                                    <div class="metro-nav-block nav-block-blue">
+                                        <div class="nav-img">
+                                            图标
+                                        </div>
+                                        <div class="nav-msg">
+                                            <div><span>{{data.task}}</span>个</div>
+                                            <div>今日总任务</div>
+                                        </div>
                                     </div>
-                                    <div class="nav-msg">
-                                        <div><span>{{data.task}}</span>个</div>
-                                        <div>今日总任务</div>
+                                    <div class="metro-nav-block nav-block-yellow">
+                                        <div class="nav-img">
+                                            图标
+                                        </div>
+                                        <div class="nav-msg">
+                                            <div><span>{{data.running}}</span>个</div>
+                                            <div>进行中</div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="metro-nav-block nav-block-yellow">
-                                    <div class="nav-img">
-                                        图标
+                                    <div class="metro-nav-block nav-block-purple">
+                                        <div class="nav-img">
+                                            图标
+                                        </div>
+                                        <div class="nav-msg">
+                                            <div><span>25</span>个</div>
+                                            <div>已完成</div>
+                                        </div>
                                     </div>
-                                    <div class="nav-msg">
-                                        <div><span>{{data.running}}</span>个</div>
-                                        <div>进行中</div>
+                                    <div class="metro-nav-block nav-block-green">
+                                        <div class="nav-img">
+                                            图标
+                                        </div>
+                                        <div class="nav-msg">
+                                            <div><span>25</span>个</div>
+                                            <div>新增档案条目</div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="metro-nav-block nav-block-purple">
-                                    <div class="nav-img">
-                                        图标
+                                    <div class="metro-nav-block nav-block-brown">
+                                        <div class="nav-img">
+                                            图标
+                                        </div>
+                                        <div class="nav-msg">
+                                            <div><span>25</span>个</div>
+                                            <div>存储总容量</div>
+                                        </div>
                                     </div>
-                                    <div class="nav-msg">
-                                        <div><span>25</span>个</div>
-                                        <div>已完成</div>
+                                    <div class="metro-nav-block nav-block-red">
+                                        <div class="nav-img">
+                                            图标
+                                        </div>
+                                        <div class="nav-msg">
+                                            <div><span>25</span>个</div>
+                                            <div>系统警告</div>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="metro-nav-block nav-block-green">
-                                    <div class="nav-img">
-                                        图标
-                                    </div>
-                                    <div class="nav-msg">
-                                        <div><span>25</span>个</div>
-                                        <div>新增项目</div>
-                                    </div>
-                                </div>
-                                <div class="metro-nav-block nav-block-brown">
-                                    <div class="nav-img">
-                                        图标
-                                    </div>
-                                    <div class="nav-msg">
-                                        <div><span>25</span>个</div>
-                                        <div>空间已使用</div>
-                                    </div>
-                                </div>
-                                <div class="metro-nav-block nav-block-red">
-                                    <div class="nav-img">
-                                        图标
-                                    </div>
-                                    <div class="nav-msg">
-                                        <div><span>25</span>个</div>
-                                        <div>系统警告</div>
-                                    </div>
-                                </div>
                                 </div>
                             </div>
                             <div class="widget-body-bt">
@@ -89,7 +89,7 @@
                                     <div id="pie"></div>
                                 </div>
                                 <div class="status-form">
-                                    <table class="table table-condensed table-striped table-bordered table-hover no-margin">
+                                    <table class="table table-condensed table-striped table-bordered table-hover">
                                         <thead>
                                             <tr>
                                                 <th class="hidden-phone">
@@ -153,9 +153,7 @@
                     "running": 1,       //运行中
                     "completed": 1,    //已完成
                     "added": 1,       //新增条目
-                    "distributedUsed": 1, //分布式已使用空间
-                    "tapeUsed": 1,      //磁带库已使用空间
-                    "diskUsed": 1, //光盘库已使用空间
+                    "capacity": 1,
                     "warning": 1     //警告数
                 },
                 devices:[
@@ -188,13 +186,15 @@
 
             }
         },
+        created(){
+            this.$ajax.get(process.env.API_HOST + 'api/dashboard/capacitystatus').then( res => {
+
+            })
+        },
         mounted(){
             this.drawpie();
         },
         methods:{
-
-            //
-            //
             // 饼图
             drawpie(){
                 let pie = this.$echarts.init(document.getElementById('pie'));

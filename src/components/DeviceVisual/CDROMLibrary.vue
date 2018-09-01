@@ -61,7 +61,7 @@
                         </div>
 
                         <div class="widget-body-rg">
-                            <table class="table table-condensed table-striped table-bordered table-hover no-margin">
+                            <table class="table table-condensed table-striped table-bordered table-hover">
                                 <thead>
                                 <tr>
                                     <th>

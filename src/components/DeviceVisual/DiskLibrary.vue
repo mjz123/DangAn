@@ -5,7 +5,7 @@
                 <div class="widget">
                     <div class="widget-header">
                         <div class="title">
-                            磁盘库存储
+                            分布式存储
                         </div>
                         <span class="tools">
                           <a class="fs1 icon-arrow-up-right" aria-hidden="true"></a>
@@ -13,86 +13,73 @@
                     </div>
                     <div class="widget-body">
                         <div class="widget-body-lf">
-                            <div class="msg" v-show=show1>
+                            <div class="msg">
                                 <div>
                                     <h4>存储集群</h4>
-                                    <p>主机数量：3</p>
-                                    <p>主机状态：正常</p>
-                                </div>
-                            </div>
-                            <div class="msg" v-show=!show1>
-                                <div>
-                                    <h4>存储集群</h4>
-                                    <p>主机名称：node1</p>
-                                    <p>CPU信息：飞腾，2个</p>
-                                    <p>内存信息：3.73G</p>
-                                    <p>硬盘信息：10块</p>
-                                    <p>在线状态：在线</p>
+                                    <p>主机名称：{{tape[0].name}}</p>
+                                    <p>CPU信息：{{tape[0].cpuType}}，{{tape[0].cpuCount}}个</p>
+                                    <p>内存信息：{{tape[0].memCapacity}}</p>
+                                    <p>硬盘信息：{{tape[0].hardDiskCount}}块</p>
+                                    <p>在线状态：{{tape[0].status | status}}</p>
                                 </div>
                             </div>
                             <div id="pie1"></div>
                         </div>
 
                         <div class="widget-body-rg">
-                            <div id="line1"></div>
-                            <div id="line2"></div>
-                            <div id="line3"></div>
+                            <div id="line"></div>
                         </div>
 
                         <div class="widget-body-lf">
                             <div class="msg" v-show=show2>
                                 <div>
-                                    <h4>存储集群</h4>
-                                    <p>主机数量：3</p>
-                                    <p>主机状态：正常</p>
+                                    <h4>存储池状态</h4>
+                                    <p>存储池数量：{{poolMsg.poolCount}}</p>
                                 </div>
                             </div>
                             <div class="msg" v-show=!show2>
                                 <div>
                                     <h4>存储集群</h4>
-                                    <p>主机名称：node1</p>
-                                    <p>CPU信息：飞腾，2个</p>
-                                    <p>内存信息：3.73G</p>
-                                    <p>硬盘信息：10块</p>
-                                    <p>在线状态：在线</p>
+                                    <p>存储池名称：{{pool[0].name}}</p>
+                                    <p>存储池容量：{{pool[0].capacity}}</p>
+                                    <p>已用容量：{{pool[0].used}}</p>
+                                    <p>未用容量：{{pool[0].free}}</p>
+                                    <p>在线状态：{{pool[0].status | status}}</p>
                                 </div>
                             </div>
                             <div id="pie2"></div>
                         </div>
 
                         <div class="widget-body-rg">
-                            <table class="table table-condensed table-striped table-bordered table-hover no-margin">
+
+                            <table class="table table-condensed table-striped table-bordered table-hover" >
                                 <thead>
                                 <tr>
-                                    <th>
-                                        序号
-                                    </th>
-                                    <th>
-                                        磁盘名称
-                                    </th>
-                                    <th>
-                                        状态
-                                    </th>
-
+                                    <th>序号</th>
+                                    <th>磁盘名称</th>
+                                    <th>所属主机</th>
+                                    <th>已用容量</th>
+                                    <th>总容量</th>
+                                    <th>状态</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>
-                                       1
-                                    </td>
-                                    <td>
-                                        node01
-                                    </td>
-                                    <td>
-                                        在线
-                                    </td>
+                                <tr v-for="(item,index) in disk">
+                                    <td>{{index+1}}</td>
+                                    <td>{{item.name}}</td>
+                                    <td>{{item.hostname}}</td>
+                                    <td>{{item.used}}</td>
+                                    <td>{{item.capacity}}</td>
+                                    <td>{{item.status | status}}</td>
                                 </tr>
-
-
                                 </tbody>
                             </table>
-
+                            <el-pagination
+                                layout="prev, pager, next"
+                                :page-count=totalPage
+                                @current-change="currentchange"
+                            >
+                            </el-pagination>
                         </div>
                     </div>
                 </div>
@@ -102,25 +89,82 @@
 </template>
 
 <script>
+    var Stomp = require('stompjs');
     export default {
-        name: "DiskLibrary",
+        name: "Distributed",
         data(){
             return{
-                show1:1,
-                show2:1
+                show1: true,
+                show2: true,
+                tape: [
+                    {
+                        "name": "",
+                        "cpuType": "",
+                        "cpuCount": "",
+                        "memCapacity": "",
+                        "hardDiskCount": "",
+                        "status": ""  //1在线 0离线
+                    }
+                ],
+                poolMsg:{},
+                pool: [{
+                    "name": "",
+                    "capacity": "",
+                    "used": "",
+                    "free": "",
+                    "status": ""   //1在线 0离线
+                }],
+                disk: [],
+                poolid: '',
+
             }
         },
+        created(){
+            //获取磁带库存储系统集群情况
+            this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/hosts').then((res) => {
+                this.$set(this.tape,0,res.data.tape[0]);
+                this.drawpie1();
+            });
+
+            //获取磁带库存储系统磁带匣总体概况
+            this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/pools').then((res) => {
+                this.poolMsg = res.data;
+                this.drawpie2();
+            });
+
+            //集群信息状态下获取分布式存储系统磁盘列表
+            this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/disks?page_num=1&count=5').then((res) => {
+                this.disk = res.data.disk;
+                this.totalPage = Number(res.data.totalPage);
+            });
+
+            // this.websocket();
+
+        },
         mounted(){
-            this.drawpie1();
-            this.drawpie2();
-            this.drawline1();
-            this.drawline2();
-            this.drawline3();
+            this.drawline();
             this.resize();
         },
+        beforeDestroy(){
+            this.disconnect();
+        },
         methods:{
+
+            disconnect(){
+                if (this.stompClient !== null) {
+                    this.stompClient.disconnect();
+                }
+                // setConnected(false);
+                console.log("Disconnected");
+            },
+
+            //主机情况饼图
             drawpie1(){
                 const that = this;
+                this.tape.forEach((item,index) => {
+                    this.tape[index].value = 1;
+                });
+
                 let pie1 = this.$echarts.init(document.getElementById('pie1'));
 
                 let option1 = {
@@ -132,20 +176,7 @@
                             label:{
                                 show:false
                             },
-                            data:[
-                                {
-                                    name:'node 01',
-                                    value:1,
-                                },
-                                {
-                                    name:'node 02',
-                                    value:1
-                                },
-                                {
-                                    name:'node 03',
-                                    value:1
-                                },
-                            ]
+                            data:that.tape
                         }
                     ],
 
@@ -156,17 +187,28 @@
 
                 pie1.setOption(option1);
 
-                pie1.on('click', function (params) {
-                    if(params.name === 'node 01'){
-                        console.log(1);
-                        that.show1 = !that.show1;
-                    }
-                });
-
+                //点击饼图显示对应主机信息
+                // this.colonyMsg.colony.forEach( item => {
+                //     pie1.on('click', params => {
+                //         if(params.name === item.name ){
+                //             this.show1 = !this.show1;
+                //             if (that.show1 === false){
+                //                 this.$ajax.get(process.env.API_HOST + 'api/device/distribute/host?deviceId=' + params.data.id) .then( res =>{
+                //                     this.$set(this.host,0,res.data.host[0]);
+                //                 });
+                //             }
+                //         }
+                //     });
+                // });
             },
 
+            //存储池情况饼图
             drawpie2(){
                 const that = this;
+                this.poolMsg.poolName.forEach((item,index) => {
+                    this.poolMsg.poolName[index].value = 1;
+                });
+
                 let pie2 = this.$echarts.init(document.getElementById('pie2'));
 
                 let option2 = {
@@ -174,98 +216,191 @@
                         {
                             type:'pie',
                             radius:['35%','60%'],
-                            color: ['#dd6b66','#759aa0','#e69d87','#8dc1a9','#ea7e53','#eedd78'],
+                            // color: ['#dd6b66','#759aa0','#e69d87','#8dc1a9','#ea7e53','#eedd78'],
                             label:{
                                 show:false
                             },
-                            data:[
-                                {
-                                    name:'node 01',
-                                    value:1,
-                                },
-                                {
-                                    name:'node 02',
-                                    value:1
-                                },
-                                {
-                                    name:'node 03',
-                                    value:1
-                                },
-                            ]
+                            data:that.poolMsg.poolName
                         }
                     ],
 
                     tooltip:{
-                        formatter:'主机名:{b}'
+                        formatter:'存储池名称:{b}'
                     }
                 };
 
                 pie2.setOption(option2);
 
-                pie2.on('click', function (params) {
-                    if(params.name === 'node 01'){
-                        console.log(1);
-                        that.show2 = !that.show2;
-                    }
-                });
-
-            },
-
-            drawline1(){
-                let line1 = this.$echarts.init(document.getElementById('line1'));
-                let datax = [];
-                let datay = [];
-
-                function random(){
-                    let date=new Date();
-                    if (datax.length < 5) {
-                       datax.push(date)
-                    } else {
-                        datax.shift();
-                        datax.push(date);
-                    }
-                    if (datay.length < 5) {
-                        datay.push(Math.random()*100)
-                    } else {
-                        datay.shift();
-                        datay.push(Math.random()*100);
-                    }
-
-                    line1.setOption({
-                        xAxis: {
-                            data: datax
-                        },
-                        series: {
-                            data: datay
+                //点击饼图获取对应存储池及硬盘信息
+                this.poolMsg.poolName.forEach( item => {
+                    pie2.on('click',  params => {
+                        this.poolid = params.data.id;
+                        if(params.name === item.name ){
+                            this.show2 = !this.show2;
+                            if (that.show2 === false){
+                                this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/pool?poolid=' + this.poolid) .then( res =>{
+                                    this.$set(this.pool,0,res.data.pool[0]);
+                                });
+                                this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/disks?poolid='+ this.poolid +'&page_num=1&count=5') .then( res =>{
+                                    this.disk = res.data.disk;
+                                });
+                            } else {
+                                this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/disks?page_num=1&count=5').then((res) => {
+                                    this.disk = res.data.disk;
+                                    this.totalPage = Number(res.data.totalPage);
+                                });
+                            }
                         }
                     });
-                }
+                });
+            },
 
+            drawline(){
+                let line = this.$echarts.init(document.getElementById('line'));
+                let time = [];
+                let cpu = [];
+                let ram = [];
+                let bw = [];
 
-                let optionLine1 = {
-                    title:{
-                        text:'CPU(%)',
-                        x:'center'
-                    },
-                    xAxis:{
-                        axisLine:{
-                            lineStyle:{
-                                color:'#3693cf'
-                            }
+                const socket = new SockJS( 'http://localhost:8090/websocket_entry');
+                this.stompClient = Stomp.over(socket);
+                this.stompClient.connect({}, frame => {
+                    console.log('Connected: ' + frame);
+                    this.stompClient.subscribe('/device/tapeSystemInfo',res => {
+                        let performance = JSON.parse(res.body);
+
+                        if(cpu.length < 10 && ram.length){
+                            cpu.push(performance.cpu*100);
+                            ram.push(performance.ram*100);
+                            bw.push(performance.bw*100)
+                        } else {
+                            cpu.shift();
+                            ram.shift();
+                            bw.shift();
+                            cpu.push(performance.cpu*100);
+                            ram.push(performance.ram*100);
+                            bw.push(performance.bw*100)
+                        }
+                        // console.log(this.CPU)
+                        let date=new Date();
+                        if (time.length < 10) {
+                            time.push(date)
+                        } else {
+                            time.shift();
+                            time.push(date);
+                        }
+
+                        line.setOption({
+                            xAxis: [
+                                {gridIndex: 0,data: time},
+                                {gridIndex: 1,data: time},
+                                {gridIndex: 2,data: time},
+                            ],
+                            series: [
+                                {gridIndex: 0,data: cpu},
+                                {gridIndex: 0,data: ram},
+                                {gridIndex: 0,data: bw},
+                            ]
+                        });
+
+                    });
+                });
+
+                let optionLine = {
+                    title:[
+                        {
+                            text:'CPU(%)',
+                            x:'center'
                         },
-                        axisLabel:{
-                            margin:3,
-                            formatter: function(value){
-                                let date = new Date(value);
-                                let texts = [date.getHours(), date.getMinutes(), date.getSeconds()];
-                                return texts.join(':');
+                        {
+                            text:'内存(%)',
+                            x:'center',
+                            y:'35%'
+                        },
+                        {
+                            text:'带宽(%)',
+                            x:'center',
+                            y:'68%'
+                        }],
+                    grid:[
+                        {
+                            // x:'2%',
+                            y:'4%',
+                            height:'30%',
+                            containLabel:true
+                        },
+                        {
+                            // x:'2%',
+                            y:'35%',
+                            height:'30%',
+                            containLabel:true
+                        },
+                        {
+                            // x:'2%',
+                            y:'68%',
+                            height:'30%',
+                            containLabel:true
+                        },
+                    ],
+                    xAxis:[
+                        {
+                            gridIndex: 0,
+                            axisLine:{
+                                lineStyle:{
+                                    color:'#3693cf'
+                                }
                             },
+                            axisLabel:{
+                                margin:3,
+                                formatter: function(value){
+                                    let date = new Date(value);
+                                    let texts = [date.getHours(), date.getMinutes(), date.getSeconds()];
+                                    return texts.join(':');
+                                },
+                            },
+                            data:[],
+                            boundaryGap:false,
                         },
-                        data:datax,
-                        boundaryGap:false,
+                        {
+                            gridIndex: 1,
+                            axisLine:{
+                                lineStyle:{
+                                    color:'#3693cf'
+                                }
+                            },
+                            axisLabel:{
+                                margin:3,
+                                formatter: function(value){
+                                    let date = new Date(value);
+                                    let texts = [date.getHours(), date.getMinutes(), date.getSeconds()];
+                                    return texts.join(':');
+                                },
+                            },
+                            data:[],
+                            boundaryGap:false,
+                        },
+                        {
+                            gridIndex: 2,
+                            axisLine:{
+                                lineStyle:{
+                                    color:'#3693cf'
+                                }
+                            },
+                            axisLabel:{
+                                margin:3,
+                                formatter: function(value){
+                                    let date = new Date(value);
+                                    let texts = [date.getHours(), date.getMinutes(), date.getSeconds()];
+                                    return texts.join(':');
+                                },
+                            },
+                            data:[],
+                            boundaryGap:false,
+                        },
 
-                    },
-                    yAxis:{
+                    ],
+                    yAxis:[{
+                        gridIndex: 0,
                         type:'value',
                         min:0,
                         max:100,
@@ -280,229 +415,125 @@
                         },
 
                     },
+                        {
+                            gridIndex: 1,
+                            type:'value',
+                            min:0,
+                            max:100,
+                            interval:50,
+                            splitLine: {
+                                show: false
+                            },
+                            axisLine:{
+                                lineStyle:{
+                                    color:'#3693cf'
+                                }
+                            },
+
+                        },
+                        {
+                            gridIndex: 2,
+                            type:'value',
+                            min:0,
+                            max:100,
+                            interval:50,
+                            splitLine: {
+                                show: false
+                            },
+                            axisLine:{
+                                lineStyle:{
+                                    color:'#3693cf'
+                                }
+                            },
+
+                        }],
                     series:[
                         {
-                            type:'line' ,
+                            xAxisIndex: 0,
+                            yAxisIndex: 0,
+                            name:'CPU(%)',
+                            type:'line',
                             lineStyle:{
                                 color:"#74b749",
                                 width:1
                             },
                             smooth: true,
                             symbol:'none',
-                            data:datay
-                        }
-                    ],
-                    grid:{
-                        top:'100%',
-                        containLabel:true
-                    }
-                };
-
-                line1.setOption(optionLine1);
-                setInterval(random,1000);
-
-
-            },
-
-            drawline2(){
-                let line2 = this.$echarts.init(document.getElementById('line2'));
-                let datax = [];
-                let datay = [];
-
-                function random(){
-                    let date=new Date();
-                    if (datax.length < 5) {
-                        datax.push(date)
-                    } else {
-                        datax.shift();
-                        datax.push(date);
-                    }
-                    if (datay.length < 5) {
-                        datay.push(Math.random()*100)
-                    } else {
-                        datay.shift();
-                        datay.push(Math.random()*100);
-                    }
-
-                    line2.setOption({
-                        xAxis: {
-                            data: datax
+                            data:[]
                         },
-                        series: {
-                            data: datay
-                        }
-                    });
-                }
-
-
-                let optionLine2 = {
-                    title:{
-                        text:'内存(%)',
-                        x:'center'
-                    },
-                    xAxis:{
-                        axisLine:{
-                            lineStyle:{
-                                color:'#3693cf'
-                            }
-                        },
-                        axisLabel:{
-                            margin:3,
-                            formatter: function(value){
-                                let date = new Date(value);
-                                let texts = [date.getHours(), date.getMinutes(), date.getSeconds()];
-                                return texts.join(':');
-                            },
-                        },
-                        data:datax,
-                        boundaryGap:false,
-
-                    },
-                    yAxis:{
-                        type:'value',
-                        min:0,
-                        max:100,
-                        interval:50,
-                        splitLine: {
-                            show: false
-                        },
-                        axisLine:{
-                            lineStyle:{
-                                color:'#3693cf'
-                            }
-                        },
-
-                    },
-                    series:[
                         {
-                            type:'line' ,
+                            xAxisIndex: 1,
+                            yAxisIndex: 1,
+                            type:'line',
                             lineStyle:{
                                 color:"#ffb400",
                                 width:1
                             },
                             smooth: true,
                             symbol:'none',
-                            data:datay
-                        }
-                    ],
-                    grid:{
-                        top:'100%',
-                        containLabel:true
-                    }
-                };
-
-                line2.setOption(optionLine2);
-                setInterval(random,1000);
-            },
-
-            drawline3(){
-                let line3 = this.$echarts.init(document.getElementById('line3'));
-                let datax = [];
-                let datay = [];
-
-                function random(){
-                    let date=new Date();
-                    if (datax.length < 5) {
-                        datax.push(date)
-                    } else {
-                        datax.shift();
-                        datax.push(date);
-                    }
-                    if (datay.length < 5) {
-                        datay.push(Math.random()*100)
-                    } else {
-                        datay.shift();
-                        datay.push(Math.random()*100);
-                    }
-
-                    line3.setOption({
-                        xAxis: {
-                            data: datax
+                            data:[]
                         },
-                        series: {
-                            data: datay
-                        }
-                    });
-                }
-
-                let optionLine3 = {
-                    title:{
-                        text:'带宽(%)',
-                        x:'center'
-                    },
-                    xAxis:{
-                        axisLine:{
-                            lineStyle:{
-                                color:'#3693cf'
-                            }
-                        },
-                        axisLabel:{
-                            margin:3,
-                            formatter: function(value){
-                                let date = new Date(value);
-                                let texts = [date.getHours(), date.getMinutes(), date.getSeconds()];
-                                return texts.join(':');
-                            },
-                        },
-                        data:datax,
-                        boundaryGap:false,
-
-                    },
-                    yAxis:{
-                        type:'value',
-                        min:0,
-                        max:100,
-                        interval:50,
-                        splitLine: {
-                            show: false
-                        },
-                        axisLine:{
-                            lineStyle:{
-                                color:'#3693cf'
-                            }
-                        },
-
-                    },
-                    series:[
                         {
-                            type:'line' ,
+                            xAxisIndex: 2,
+                            yAxisIndex: 2,
+                            type:'line',
                             lineStyle:{
                                 color:"#f63131",
                                 width:1
                             },
                             smooth: true,
                             symbol:'none',
-                            data:datay
+                            data:[]
                         }
                     ],
-                    grid:{
-                        top:'100%',
-                        containLabel:true
-                    }
+
                 };
 
-                line3.setOption(optionLine3);
-                setInterval(random,1000);
-
+                line.setOption(optionLine);
+                // setInterval(random,1000);
 
             },
 
+
+            //图表自适应
             resize(){
                 let pie1 = this.$echarts.init(document.getElementById('pie1'));
                 let pie2 = this.$echarts.init(document.getElementById('pie2'));
-                let line1 = this.$echarts.init(document.getElementById('line1'));
-                let line2 = this.$echarts.init(document.getElementById('line2'));
-                let line3 = this.$echarts.init(document.getElementById('line3'));
+                let line = this.$echarts.init(document.getElementById('line'));
+
 
                 window.onresize = function(){
                     pie1.resize();
                     pie2.resize();
-                    line1.resize();
-                    line2.resize();
-                    line3.resize();
+                    line.resize();
+
+                }
+            },
+
+            currentchange(val){
+
+                if(this.show2 === true){
+                    this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/disks?page_num='+ val +'&count=5').then((res) => {
+                        this.disk = res.data.disk;
+                        this.totalPage = Number(res.data.totalPage);
+                    });
+                } else {
+                    this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/pool/disks?poolid='+ this.poolid +'&page_num='+ val +'&count=5') .then( res =>{
+                        this.disk = res.data.disk;
+                        this.totalPage = Number(res.data.totalPage);
+                    });
+                }
+            },
+
+        },
+        filters:{
+            status(value){
+                if (value == 1) {
+                    return "在线"
+                } else {
+                    return "离线"
                 }
             }
-
         }
     }
 
@@ -513,6 +544,7 @@
         overflow: hidden;
         background: #f7f7f7;
     }
+
     .widget-body-lf{
         float: left;
         width: 49.5%;
@@ -520,12 +552,14 @@
         background: #fff;
         margin-bottom: 10px;
     }
-    .widget-body-rg{
+    .widget-body-rg {
+        position: relative;
         float: right;
         width: 49.5%;
         height: 48%;
         background: #fff;
         margin-bottom: 10px;
+
     }
     .msg {
         float: left;
@@ -549,9 +583,22 @@
         width: 50%;
         height: 100%;
     }
-    #line1,#line2,#line3{
+    #line{
         width: 100%;
-        height: 30%;
+        height: 100%;
+    }
+    th,td{
+        text-align: center;
+        font-size: 14px;
+    }
+    .el-pagination {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+    }
+    .table {
+        width: 95%;
+        margin: 10px auto;
     }
 
 </style>

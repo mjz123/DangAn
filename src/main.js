@@ -6,13 +6,16 @@ import router from './router'
 import jquery from 'jquery'
 // import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.min.js'
+import axios from 'axios'
 import echarts from 'echarts'
 
-import { Tree } from 'element-ui'
+import { Tree,Pagination } from 'element-ui'
 
 Vue.use(Tree);
+Vue.use(Pagination);
 
 Vue.prototype.$echarts = echarts;
+Vue.prototype.$ajax = axios;
 
 Vue.config.productionTip = false
 
