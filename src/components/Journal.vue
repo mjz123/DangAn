@@ -1,57 +1,74 @@
 <template>
     <div class="dash">
         <div class="sub-nav">
-            <ul></ul>
+            <ul>
+                <li>
+                    <router-link to="/Journal/Distributed" tag="a">
+                        分布式存储
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to="/Journal/DiskLibrary" tag="a">
+                        磁带库存储
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to="/Journal/CDROMLibrary" tag="a">
+                        光盘库存储
+                    </router-link>
+                </li>
+            </ul>
         </div>
-        <div class="dashboard-wrapper">
-            <div class="left-sidebar">
-                <div class="row-fluid view">
-                    <div class="widget">
-                        <div class="widget-header">
-                            <div class="title">
-                                系统日志
-                            </div>
-                        </div>
-                        <div class="widget-body">
-                            <table class="table table-condensed table-striped table-bordered table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>
-                                            序号
-                                        </th>
-                                        <th>
-                                            类型
-                                        </th>
-                                        <th>
-                                            时间
-                                        </th>
-                                        <th>
-                                            内容
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            1
-                                        </td>
-                                        <td>
-                                            node01
-                                        </td>
-                                        <td>
-                                            2012-1-1
-                                        </td>
-                                        <td>
-                                            xxx
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <router-view></router-view>
+        <!--<div class="dashboard-wrapper">-->
+            <!--<div class="left-sidebar">-->
+                <!--<div class="row-fluid view">-->
+                    <!--<div class="widget">-->
+                        <!--<div class="widget-header">-->
+                            <!--<div class="title">-->
+                                <!--系统日志-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="widget-body">-->
+                            <!--<table class="table table-condensed table-striped table-bordered table-hover">-->
+                                <!--<thead>-->
+                                    <!--<tr>-->
+                                        <!--<th>-->
+                                            <!--序号-->
+                                        <!--</th>-->
+                                        <!--<th>-->
+                                            <!--类型-->
+                                        <!--</th>-->
+                                        <!--<th>-->
+                                            <!--时间-->
+                                        <!--</th>-->
+                                        <!--<th>-->
+                                            <!--内容-->
+                                        <!--</th>-->
+                                    <!--</tr>-->
+                                <!--</thead>-->
+                                <!--<tbody>-->
+                                    <!--<tr>-->
+                                        <!--<td>-->
+                                            <!--1-->
+                                        <!--</td>-->
+                                        <!--<td>-->
+                                            <!--node01-->
+                                        <!--</td>-->
+                                        <!--<td>-->
+                                            <!--2012-1-1-->
+                                        <!--</td>-->
+                                        <!--<td>-->
+                                            <!--xxx-->
+                                        <!--</td>-->
+                                    <!--</tr>-->
+                                <!--</tbody>-->
+                            <!--</table>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
     </div>
 </template>
 
@@ -62,5 +79,7 @@
 </script>
 
 <style scoped>
-
+    .router-link-active {
+        font-size: 16px;
+    }
 </style>

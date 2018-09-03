@@ -13,6 +13,10 @@ import DistributedDevice from '@/components/DeviceVisual/Distributed'
 import DiskLibraryDevice from '@/components/DeviceVisual/DiskLibrary'
 import CDROMLibraryDevice from '@/components/DeviceVisual/CDROMLibrary'
 
+import DistributedJou from '@/components/Journal/Distributed'
+import DiskLibraryJou from '@/components/Journal/DiskLibrary'
+import CDROMLibraryJou from '@/components/Journal/CDROMLibrary'
+
 import FourProperties from '@/components/FourProperties'
 import Journal from '@/components/Journal'
 import Help from '@/components/Help'
@@ -23,6 +27,7 @@ export default new Router({
     {path:'/',redirect:'Dashboard'},
     {path: '/DeviceVisual', redirect: '/DeviceVisual/Distributed'},
       {path: '/DataVisual', redirect: '/DataVisual/Distributed'},
+      {path: '/Journal', redirect: '/Journal/Distributed'},
     {
         path: '/Navigation',
         name: 'Navigation',
@@ -86,6 +91,23 @@ export default new Router({
                 path: '/Journal',
                 name: 'Journal',
                 component: Journal,
+                children:[
+                    {
+                        path: '/Journal/Distributed',
+                        name: 'DistributedJou',
+                        component: DistributedJou,
+                    },
+                    {
+                        path: '/Journal/DiskLibrary',
+                        name: 'DiskLibraryJou',
+                        component: DiskLibraryJou,
+                    },
+                    {
+                        path: '/Journal/CDROMLibrary',
+                        name: 'CDROMLibraryJou',
+                        component: CDROMLibraryJou,
+                    }
+                ]
             },
             {
                 path: '/Help',

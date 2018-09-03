@@ -14,35 +14,30 @@
                     <div class="widget-body">
                         <div class="folder">
                             <el-tree
-                                :data="data"
+                                ref="tree"
+                                :data="tree"
                                 node-key="id"
-                                :render-content="renderContent">
+                                :render-content="renderContent"
+                                :props="defaultProps"
+                                :load="loadNode"
+                                lazy
+                                >
                             </el-tree>
-                            <!--<el-tree :data="data" :props="defaultProps" @node-click="handleNodeClick"></el-tree>-->
                         </div>
                         <div class="file">
-                            <div class="file-content">
-                                <svg class="icon" aria-hidden="true">
-                                    <use xlink:href="#icon-doc"></use>
-                                </svg>
-                                <div>aaa</div>
-                            </div>
-                            <div class="file-content">
-                                <svg class="icon" aria-hidden="true">
-                                    <use xlink:href="#icon-doc"></use>
-                                </svg>
-                                <div>aaa</div>
-                            </div>
-                            <div class="file-content">
-                                <svg class="icon" aria-hidden="true">
-                                    <use xlink:href="#icon-doc"></use>
-                                </svg>
-                                <div>aaa</div>
-                            </div>
+                            <div id="pie" v-if=show></div>
+                            <div v-if=!show>
+                                <!--<svg class="icon" aria-hidden="true">-->
+                                    <!--<use xlink:href="#icon-doc"></use>-->
+                                <!--</svg>-->
+                                <div class="file-content">
+                                    <img src="../../assets/img/file2.png"/>
+                                    <p>aaa</p>
+                                </div>
 
+                            </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -54,36 +49,55 @@
         name: "Distributed",
         data() {
             return {
-                data: [{
-                    label: '一级 1',
-                    children: [{
-                        label: '二级 1-1',
-                        children: [{
-                            label: '三级 1-1-1'
-                        }]
-                    }]
-                }, {
-                    label: '一级 2',
-                    children: [{
-                        label: '二级 2-1',
-                        children: [{
-                            label: '三级 2-1-1'
-                        }]
-                    }, {
-                        label: '二级 2-2',
-                        children: [{
-                            label: '三级 2-2-1'
-                        }]
-                    }]
-                }, {
-                    label: '一级 3',
-                }],
+                show:true,
+                tree: [
+                    // {
+                    //     label: '存储池1',
+                    //     children: [{
+                    //         label: '二级 1-1',
+                    //         children: [{
+                    //             label: '三级 1-1-1'
+                    //         }]
+                    //     }]
+                    // }
+                ],
                 defaultProps: {
-                    children: 'children',
-                    label: 'label'
-                }
+                    // children: 'children',
+                    label: 'name'
+                },
+                idArray: []
             };
         },
+        created(){
+            this.$ajax.get(process.env.API_HOST + 'api/dashboard/distribute/pools').then((res) => {
+                console.log(res.data);
+                this.poolMsg = res.data;
+                this.tree = res.data.poolName;
+
+                this.tree.forEach( (item,index)=>{
+                    this.idArray.push(item.id);
+
+                })
+                console.log(this.idArray)
+
+                // for (let i=0; i<idArray.length; i++){
+                //     console.log($('.el-tree-node__content')[0])
+                // }
+                var that = this;
+                setTimeout( () => {
+                    console.log('done');
+                    $('.el-tree-node__content').each(function (index) {
+                        $(this).attr('id',that.idArray[index])
+                    })
+                },500)
+
+
+                this.drawpie();
+            });
+        },
+        // mounted(){
+        //     console.log($('.el-tree-node__content'))
+        // },
         methods: {
             renderContent(h, { node, data, store }) {
                 return (
@@ -94,9 +108,104 @@
             );
             },
 
-            handleNodeClick(data) {
-                console.log(data);
-            }
+            drawpie(){
+                const that = this;
+                this.poolMsg.poolName.forEach((item,index) => {
+                    this.poolMsg.poolName[index].value = 1;
+                });
+
+                let pie = this.$echarts.init(document.getElementById('pie'));
+
+                let option2 = {
+                    series:[
+                        {
+                            type:'pie',
+                            radius:['20%','40%'],
+                            // color: ['#dd6b66','#759aa0','#e69d87','#8dc1a9','#ea7e53','#eedd78'],
+                            label:{
+                                show:false
+                            },
+                            data:that.poolMsg.poolName
+                        }
+                    ],
+
+                    tooltip:{
+                        formatter:'存储池名称:{b}'
+                    }
+                };
+
+                pie.setOption(option2);
+
+                //点击饼图获取展开存储池列表
+                this.poolMsg.poolName.forEach( item => {
+                    pie.on('click',  params => {
+                        var that = this;
+                        this.poolid = params.data.id;
+                        if(params.name === item.name ){
+
+                            console.log(item.id);
+
+                            for (let i=0; i<this.idArray.length; i++){
+                                let a = this.idArray[i];
+                                console.log($("#"+a).attr('id'))
+                                if(item.id == $("#"+a).attr('id')){
+                                    $("#"+a).click();
+                                }
+                                // $('.el-tree-node__content')[i].attr('id',this.idArray[i]);
+                            }
+                            // var con = $('.el-tree-node__content');
+                            // // console.log(con[1].textContent);
+                            // console.log(params.name);
+                            // for (let i=0; i<that.idArray.length; i++){
+                            //     console.log(con[1].textContent);
+                            //     if (con[i].textContent == params.name){
+                            //         con[i].click();
+                            //     }
+                            // }
+                            // con.forEach((item,index) => {
+                            //     if (con[index].innerText == '长期保存库'){
+                            //         con[index].click();
+                            //     }
+                            // })
+                            // var x = con[0].textContent;
+                            // console.log(typeof x);
+                            // // if (con[0].textContent == "长期保存库"){
+                            // //     $('.el-tree-node__content')[0].click();
+                            // // }
+
+                        }
+                    });
+                });
+
+                window.onresize = function(){
+                    pie.resize();
+                }
+            },
+            // handleNodeClick(data,node,self) {
+            //     console.log(data);
+            //     this.$ajax(process.env.API_HOST + 'api/dashboard/distribute/rootdirs').then(res => {
+            //         //             console.log(res.data.folder);
+            //         //             resolve(res.data.folder)
+            //         })
+            // },
+            loadNode(node,resolve){
+                if (node.level === 0) {
+                    return resolve([]);
+                } else if (node.level === 1) {
+                    this.$ajax(process.env.API_HOST + 'api/dashboard/distribute/rootdirs').then(res => {
+                        console.log(res.data.folder);
+                        resolve(res.data.folder);
+                        // this.show = !this,show;
+                    })
+                } else {
+                    this.$ajax(process.env.API_HOST + 'api/dashboard/distribute/rootdirs').then(res => {
+                        console.log(res.data.folder);
+                        resolve(res.data.folder);
+                        this.show = !this,show;
+                    })
+                }
+            },
+
         }
     }
    </script>
@@ -127,6 +236,17 @@
         flex-direction: column;
         align-items: center;
         margin: 20px 0 0 40px;
+    }
+    .file-content img {
+        width: 55px;
+    }
+    .file-content p {
+        font-size: 15px;
+    }
+
+    #pie {
+        width: 100%;
+        height: 100%;
     }
 
 

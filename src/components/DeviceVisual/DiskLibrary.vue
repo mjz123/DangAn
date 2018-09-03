@@ -52,7 +52,7 @@
 
                         <div class="widget-body-rg">
 
-                            <table class="table table-condensed table-striped table-bordered table-hover" >
+                            <table class="table table-condensed table-striped table-bordered table-hover">
                                 <thead>
                                 <tr>
                                     <th>序号</th>

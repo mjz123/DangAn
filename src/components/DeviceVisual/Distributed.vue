@@ -34,8 +34,6 @@
 
                         <div class="widget-body-rg">
                             <div id="line"></div>
-                            <!--<div id="line2"></div>-->
-                            <!--<div id="line3"></div>-->
                         </div>
 
                         <div class="widget-body-lf">
@@ -593,7 +591,7 @@
         width: 50%;
         height: 100%;
     }
-    #line,#line2,#line3{
+    #line{
         width: 100%;
         height: 100%;
     }
