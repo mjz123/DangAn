@@ -3,17 +3,17 @@
         <div class="sub-nav">
             <ul>
                 <li>
-                    <router-link to="/DataVisual/Distributed" tag="a">
+                    <router-link to="/DataVisual/Distributed" @click.native="refresh" tag="a">
                         分布式存储
                     </router-link>
                 </li>
                 <li>
-                    <router-link to="/DataVisual/DiskLibrary" tag="a">
+                    <router-link to="/DataVisual/DiskLibrary" @click.native="refresh" tag="a">
                         磁带库存储
                     </router-link>
                 </li>
                 <li>
-                    <router-link to="/DataVisual/CDROMLibrary" tag="a">
+                    <router-link to="/DataVisual/CDROMLibrary" @click.native="refresh" tag="a">
                         光盘库存储
                     </router-link>
                 </li>
@@ -25,7 +25,12 @@
 
 <script>
     export default {
-        name: "DataVisual"
+        name: "DataVisual",
+        methods:{
+            refresh(){
+                this.$router.go(0);
+            }
+        }
     }
 </script>
 

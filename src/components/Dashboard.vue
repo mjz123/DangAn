@@ -13,7 +13,8 @@
                             </div>
                         </div>
                         <div class="widget-body">
-                            <img src="../assets/img/fuwuqi.gif"/>
+                            <!--<img src="../assets/img/fuwuqi.gif"/>-->
+                            <img class="fuwu" src="../assets/img/jigui3.gif"/>
                         </div>
                     </div>
                 </div>
@@ -28,58 +29,56 @@
                         <div class="widget-body">
                             <div class="metro-nav">
                                 <div class="metro-nav-wrap">
-                                    <div class="metro-nav-block nav-block-blue">
+                                    <div class="metro-nav-block" style="background: #74b749">
                                         <div class="nav-img">
-                                            图标
+                                            <img src="../assets/img/distri.png"/>
                                         </div>
                                         <div class="nav-msg">
-                                            <div><span>{{data.task}}</span>个</div>
-                                            <div>今日总任务</div>
+                                            <div><span>{{Math.ceil(data.distcapacity*100)/100}}</span>T</div>
+                                            <div>分布式总容量</div>
                                         </div>
                                     </div>
-                                    <div class="metro-nav-block nav-block-yellow">
-                                        <div class="nav-img">
-                                            图标
-                                        </div>
+                                    <div class="metro-nav-block" style="background: #ffb400">
+                                        <div class="nav-img">     ,
+                                            <img src="../assets/img/tape2.png"/></div>
                                         <div class="nav-msg">
-                                            <div><span>{{data.running}}</span>个</div>
-                                            <div>进行中</div>
+                                            <div><span>{{data.tapecapacity}}</span>个</div>
+                                            <div>磁带库总磁带数</div>
                                         </div>
                                     </div>
-                                    <div class="metro-nav-block nav-block-purple">
+                                    <div class="metro-nav-block side" style="background: #57cbe4">
                                         <div class="nav-img">
-                                            图标
+                                            <img class="disk" src="../assets/img/disk3.png"/>
                                         </div>
                                         <div class="nav-msg">
-                                            <div><span>25</span>个</div>
-                                            <div>已完成</div>
+                                            <div><span>{{data.cdcapacity}}</span>个</div>
+                                            <div>光盘库在线光盘数</div>
                                         </div>
                                     </div>
-                                    <div class="metro-nav-block nav-block-green">
+                                    <div class="metro-nav-block" style="background: #74C96B">
                                         <div class="nav-img">
-                                            图标
-                                        </div>
+                                            <img src="../assets/img/distri.png"/></div>
                                         <div class="nav-msg">
-                                            <div><span>25</span>个</div>
-                                            <div>新增档案条目</div>
+                                            <div><span>{{Math.ceil(data.distfree*100)/100}}</span>T</div>
+                                            <div>分布式可用容量</div>
                                         </div>
                                     </div>
-                                    <div class="metro-nav-block nav-block-brown">
+                                    <div class="metro-nav-block" style="background: #FFD300">
                                         <div class="nav-img">
-                                            图标
-                                        </div>
+
+                                            <img src="../assets/img/tape2.png"/></div>
                                         <div class="nav-msg">
-                                            <div><span>25</span>个</div>
-                                            <div>存储总容量</div>
+                                            <div><span>{{data.tapefree}}</span>个</div>
+                                            <div>磁带库可用磁带数</div>
                                         </div>
                                     </div>
-                                    <div class="metro-nav-block nav-block-red">
+                                    <div class="metro-nav-block side" style="background: #57E3E4">
                                         <div class="nav-img">
-                                            图标
+                                            <img class="disk" src="../assets/img/disk3.png"/>
                                         </div>
                                         <div class="nav-msg">
-                                            <div><span>25</span>个</div>
-                                            <div>系统警告</div>
+                                            <div><span>{{data.cdfree}}</span>个</div>
+                                            <div>光盘库可用空白光盘数</div>
                                         </div>
                                     </div>
                                 </div>
@@ -106,18 +105,8 @@
                                                     分布式存储
                                                 </td>
                                                 <td class="hidden-phone">
-                                                    <span class="label label label-success">
-                                                        正常
-                                                    </span>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="hidden-phone">
-                                                    光盘库存储
-                                                </td>
-                                                <td class="hidden-phone">
-                                                    <span class="label label label-success">
-                                                        正常
+                                                    <span class="label" :class="{'label-success': !warningMsg[1].status, 'label-warning': warningMsg[1].status}">
+                                                        {{warningMsg[1].status | status}}
                                                     </span>
                                                 </td>
                                             </tr>
@@ -126,10 +115,25 @@
                                                     磁带库存储
                                                 </td>
                                                 <td class="hidden-phone">
-                                                    <span class="label label label-warning">
-                                                        警告
+                                                    <span class="label" :class="{'label-success': !warningMsg[2].status, 'label-warning': warningMsg[2].status}">
+                                                        {{warningMsg[2].status | status}}
                                                     </span>
                                                 </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="hidden-phone">
+                                                    光盘库存储
+                                                </td>
+                                                <td class="hidden-phone">
+                                                    <span class="label" :class="{'label-success': !warningMsg[0].status, 'label-warning': warningMsg[0].status}">
+                                                        {{warningMsg[0].status | status}}
+                                                    </span>
+                                                </td>
+                                                <!--<td class="hidden-phone">-->
+                                                    <!--<span class="label label label-warning">-->
+                                                        <!--警告-->
+                                                    <!--</span>-->
+                                                <!--</td>-->
                                             </tr>
                                         </tbody>
                                     </table>
@@ -148,52 +152,80 @@
         name: "Dashboard",
         data(){
             return{
-                data:{
-                    "task": 1,           //今日总任务
-                    "running": 1,       //运行中
-                    "completed": 1,    //已完成
-                    "added": 1,       //新增条目
-                    "capacity": 1,
-                    "warning": 1     //警告数
-                },
+                data:{},
                 devices:[
                     {
-                        "devType": "distributed",  //分布式
+                        "devType": "",  //分布式
                         "data":[
                             {
-                                "poolName": "xx",
-                                "capacity": 20.34,
-                                "usedCapacity": 15.4,
-                            },
-                            {
-                                "poolName": "yy",
-                                "capacity": 20,
-                                "usedCapacity": 15.4,
+                                "poolName": "",
+                                "capacity": '',
+                                "usedCapacity": '',
                             },
                         ]
                     },
                     {
-                        "devType": "tape",           //磁带库
-                        "capacity": 100,
-                        "usedCapacity": 19.3,
+                        "devType": "tape",
+                        "capacity": '',
+                        "usedCapacity": '',
                     },
                     {
-                        "devType": "tape",           //磁带库
-                        "capacity": 100,
-                        "usedCapacity": 19.3,
+                        "devType": "",
+                        "capacity": '',
+                        "usedCapacity": '',
+                    }
+                ],
+
+                polling:'',
+                warningMsg:[
+                    {
+                        "name": "distributed",
+                        "status": 0			//0为正常 1为警告
+                    },
+                    {
+                        "name": "tape",
+                        "status": 0			//0为正常 1为警告
+                    },
+                    {
+                        "name": "disk",
+                        "status": 0			//0为正常 1为警告
                     }
                 ]
-
             }
         },
         created(){
             this.$ajax.get(process.env.API_HOST + 'api/dashboard/capacitystatus').then( res => {
-
+                this.data = res.data.data[0];
             })
+
+            this.$ajax.get(process.env.API_HOST + 'api/dashboard/curcapacitystatus').then( res => {
+                this.devices = res.data.device;
+                console.log(this.devices);
+                this.drawpie();
+            })
+
+            const socket = new SockJS( '/websocket_entry');
+            this.stompClient = Stomp.over(socket);
+            this.stompClient.connect({}, frame => {
+                console.log('Connected: ' + frame);
+                this.stompClient.subscribe('/log/warning_info',res => {
+                    console.log(JSON.parse(res.body));
+                    let temp = JSON.parse(res.body);
+                    this.warningMsg = temp.status;
+                    console.log(this.warningMsg);
+                });
+            });
+
+            this.polling = setInterval(() => {
+                this.stompClient.send("/app/warning_info");
+            },5000);
+
         },
-        mounted(){
-            this.drawpie();
+
+        beforeDestroy(){
+            clearInterval(this.polling);
         },
+
         methods:{
             // 饼图
             drawpie(){
@@ -204,7 +236,7 @@
                         {
                             type:'pie',
                             radius:['15%','60%'],
-                            color:['#57cbe4','#b0c6de','#4c6de1'],
+                            color:['#74b749','#57cbe4','#ffb400'],
                             label:{
                                 show:false
                             },
@@ -218,7 +250,7 @@
                                         formatter:function (params) {
                                             let res = params.name + '<br/>';
                                             for (let i=0; i<that.devices[0].data.length; i++){
-                                                res += that.devices[0].data[i].poolName + '总容量'+ that.devices[0].data[i].capacity + '可用容量' + that.devices[0].data[i].usedCapacity + '<br/>';
+                                                res += that.devices[0].data[i].poolName + '总容量'+ Math.ceil(that.devices[0].data[i].capacity*100)/100 + 'T 可用容量' + Math.ceil(that.devices[0].data[i].usedCapacity*100)/100 + 'T<br/>';
                                             }
                                             return res;
                                         }
@@ -228,14 +260,14 @@
                                     name:'光盘库存储',
                                     value:1,
                                     tooltip:{
-                                        formatter:'{b}</br> 总容量' + that.devices[1].capacity +'可用容量' + that.devices[1].usedCapacity
+                                        formatter:'{b}</br> 总容量' + Math.ceil(that.devices[2].capacity*100)/100 +'T 可用容量' + Math.ceil(that.devices[2].usedCapacity*100)/100 +'T'
                                     }
                                 },
                                 {
                                     name:'磁带库存储',
                                     value:1,
                                     tooltip:{
-                                        formatter:'{b}</br> 总容量' + that.devices[2].capacity +'可用容量' + that.devices[1].usedCapacity
+                                        formatter:'{b}</br> 总容量' + Math.ceil(that.devices[1].capacity*100)/100 +'T 可用容量' + Math.ceil(that.devices[1].usedCapacity*100)/100+'T'
                                     }
                                 },
                             ],
@@ -258,6 +290,15 @@
                 }
             },
 
+        },
+        filters:{
+            status(value){
+                if (value == 0) {
+                    return "正常"
+                } else {
+                    return "警告"
+                }
+            }
         }
     }
 </script>
@@ -276,13 +317,16 @@
         height: calc(100% - 61px);
         position: relative;
     }
-    .widget-body img {
-        width: 85%;
+    .fuwu {
+        width: 70%;
         max-height: 100%;
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%,-50%);
+    }
+    .metro-nav-block {
+        box-shadow: 3px 3px 8px #757272;
     }
     .metro-nav {
         overflow: hidden;
@@ -339,7 +383,7 @@
         width: 100%;
         height: 100%;
     }
-    .nav-block-purple,.nav-block-red{
+    .side{
         margin-right: 0;
     }
     .metro-nav-wrap {
@@ -347,6 +391,12 @@
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
+    }
+    .disk {
+        width: 80%;
+    }
+    .nav-img img {
+        padding-left: 10px;
     }
 
 

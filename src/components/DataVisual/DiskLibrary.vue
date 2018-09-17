@@ -8,7 +8,7 @@
                             磁带库存储
                         </div>
                         <span class="tools" >
-                          <a class="fs1 icon-arrow-up-right" aria-hidden="true"></a>
+                          <a class="fs1 icon-cog" aria-hidden="true"></a>
                         </span>
                     </div>
                     <div class="widget-body">
@@ -25,7 +25,10 @@
                             </el-tree>
                         </div>
                         <div class="file">
-                            <div id="pie" v-if=show></div>
+                            <div class="charts" v-if=show>
+                                <div id="pie"></div>
+                                <div id="bar"></div>
+                            </div>
                             <div v-if=!show>
                                 <!--<svg class="icon" aria-hidden="true">-->
                                 <!--<use xlink:href="#icon-doc"></use>-->
@@ -65,6 +68,7 @@
                     // children: 'children',
                     label: 'name'
                 },
+                poolMsg:{},
                 idArray: []
             };
         },
@@ -76,9 +80,7 @@
 
                 this.tree.forEach( (item,index)=>{
                     this.idArray.push(item.id);
-
-                })
-                console.log(this.idArray)
+                });
 
                 // for (let i=0; i<idArray.length; i++){
                 //     console.log($('.el-tree-node__content')[0])
@@ -89,15 +91,18 @@
                     $('.el-tree-node__content').each(function (index) {
                         $(this).attr('id',that.idArray[index])
                     })
-                },500)
+                },500);
 
 
                 this.drawpie();
+                this.drawbar();
             });
+
+
         },
-        // mounted(){
-        //     console.log($('.el-tree-node__content'))
-        // },
+        mounted(){
+            this.resize();
+        },
         methods: {
             renderContent(h, { node, data, store }) {
                 return (
@@ -112,25 +117,41 @@
                 const that = this;
                 this.poolMsg.poolName.forEach((item,index) => {
                     this.poolMsg.poolName[index].value = 1;
+                    this.poolMsg.poolName[index].label = {
+                        formatter:params => {
+                            let res = '名称:'+params.name + '\n';
+                            res += '总容量：' + this.poolMsg.poolName[index].capacity + 'T\n'+ '已用容量' + this.poolMsg.poolName[index].used+'T';
+                            return res;
+                        },
+                        fontSize:16,
+
+                    };
                 });
 
                 let pie = this.$echarts.init(document.getElementById('pie'));
 
                 let option2 = {
+
                     series:[
                         {
                             type:'pie',
-                            radius:['20%','40%'],
+                            radius:['15%','35%'],
                             // color: ['#dd6b66','#759aa0','#e69d87','#8dc1a9','#ea7e53','#eedd78'],
                             label:{
-                                show:false
+                                // formatter:params => {
+                                //     let res = '磁带库名称'+params.name + '\n';
+                                //     for (let i=0; i<this.poolMsg.poolName.length; i++){
+                                //         res += '总容量：' + this.poolMsg.poolName[i].capacity + '\n'+ '已用容量' + this.poolMsg.poolName[i].used;
+                                //     }
+                                //     return res;
+                                // }
                             },
                             data:that.poolMsg.poolName
                         }
                     ],
 
                     tooltip:{
-                        formatter:'存储池名称:{b}'
+                        formatter:'磁带库名称:{b}'
                     }
                 };
 
@@ -139,7 +160,60 @@
                 //点击饼图获取展开存储池列表
                 this.poolMsg.poolName.forEach( item => {
                     pie.on('click',  params => {
-                        var that = this;
+
+                        // this.poolid = params.data.id;
+                        if(params.name === item.name ){
+
+                            console.log(item.id);
+
+                            for (let i=0; i<this.idArray.length; i++){
+                                let a = this.idArray[i];
+                                console.log($("#"+a).attr('id'))
+                                if(item.id == $("#"+a).attr('id')){
+                                    $("#"+a).click();
+                                }
+                                // $('.el-tree-node__content')[i].attr('id',this.idArray[i]);
+                            }
+                        }
+                    });
+                });
+
+            },
+
+            drawbar(){
+                const that = this;
+                let bar = this.$echarts.init(document.getElementById('bar'));
+
+                let option = {
+                    grid:{
+                        top:'25%',
+                        height:'50%'
+                    },
+                    legend: {
+                        top:'18%',
+                        // data:['邮件营销','联盟广告','视频广告']
+                    },
+                    tooltip: {},
+                    dataset: {
+                        dimensions: ['name', 'free', 'used', 'capacity'],
+                        source:that.poolMsg.poolName
+                    },
+
+                    xAxis: {type: 'category'},
+                    yAxis: {},
+                    series: [
+                        {type: 'bar'},
+                        {type: 'bar'},
+                        {type: 'bar'}
+                    ]
+
+                };
+
+                bar.setOption(option);
+
+                this.poolMsg.poolName.forEach( item => {
+                    bar.on('click',  params => {
+
                         this.poolid = params.data.id;
                         if(params.name === item.name ){
 
@@ -153,41 +227,11 @@
                                 }
                                 // $('.el-tree-node__content')[i].attr('id',this.idArray[i]);
                             }
-                            // var con = $('.el-tree-node__content');
-                            // // console.log(con[1].textContent);
-                            // console.log(params.name);
-                            // for (let i=0; i<that.idArray.length; i++){
-                            //     console.log(con[1].textContent);
-                            //     if (con[i].textContent == params.name){
-                            //         con[i].click();
-                            //     }
-                            // }
-                            // con.forEach((item,index) => {
-                            //     if (con[index].innerText == '长期保存库'){
-                            //         con[index].click();
-                            //     }
-                            // })
-                            // var x = con[0].textContent;
-                            // console.log(typeof x);
-                            // // if (con[0].textContent == "长期保存库"){
-                            // //     $('.el-tree-node__content')[0].click();
-                            // // }
-
                         }
                     });
                 });
-
-                window.onresize = function(){
-                    pie.resize();
-                }
             },
-            // handleNodeClick(data,node,self) {
-            //     console.log(data);
-            //     this.$ajax(process.env.API_HOST + 'api/dashboard/distribute/rootdirs').then(res => {
-            //         //             console.log(res.data.folder);
-            //         //             resolve(res.data.folder)
-            //         })
-            // },
+
             loadNode(node,resolve){
                 if (node.level === 0) {
                     return resolve([]);
@@ -203,6 +247,16 @@
                         resolve(res.data.folder);
                         this.show = !this,show;
                     })
+                }
+            },
+
+            resize(){
+                let pie = this.$echarts.init(document.getElementById('pie'));
+                let bar = this.$echarts.init(document.getElementById('bar'));
+
+                window.onresize = function(){
+                    pie.resize();
+                    bar.resize();
                 }
             },
 
@@ -244,8 +298,14 @@
         font-size: 15px;
     }
 
-    #pie {
+    .charts {
         width: 100%;
+        height: 100%;
+    }
+
+    #pie,#bar {
+        float: left;
+        width: 50%;
         height: 100%;
     }
 

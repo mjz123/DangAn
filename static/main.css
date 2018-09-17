@@ -937,9 +937,9 @@ table {
     background-color: white; }
 
 .table-condensed th, .table-condensed td {
-  padding: 4px 5px; }
+  padding: 3.5px 5px; }
 .table-condensed th {
-  padding: 8px 5px; }
+  padding: 6px 5px; }
 
 .table-bordered {
   border: 1px solid #d9d9d9;
@@ -5589,7 +5589,7 @@ header {
   letter-spacing: 0.02em;
   line-height: 20px;
   font-smooth: always;
-  margin: 0 3% 3% 0;
+  margin: 0 2% 3% 3px;
   overflow: hidden;
   z-index: 1; }
   .metro-nav .metro-nav-block [data-icon]::before {

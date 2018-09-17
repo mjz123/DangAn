@@ -8,7 +8,7 @@
                             光盘库存储
                         </div>
                         <span class="tools" >
-                          <a class="fs1 icon-arrow-up-right" aria-hidden="true"></a>
+                          <a class="fs1 icon-cog" aria-hidden="true"></a>
                         </span>
                     </div>
                     <div class="widget-body">

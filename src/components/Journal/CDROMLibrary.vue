@@ -9,10 +9,10 @@
                         </div>
                     </div>
                     <div class="widget-body">
-                        <div class="search">
-                            按时间搜索：<input type="date"/>
-                            按内容搜索：<input type="text"/>
-                        </div>
+                        <!--<div class="search">-->
+                            <!--按时间搜索：<input type="date"/>-->
+                            <!--按内容搜索：<input type="text"/>-->
+                        <!--</div>-->
                         <table class="table table-condensed table-striped table-bordered table-hover">
                             <thead>
                             <tr>
@@ -36,7 +36,7 @@
                                     {{index+1}}
                                 </td>
                                 <td>
-                                    {{item.time}}
+                                    {{new Date(item.time).toLocaleString()}}
                                 </td>
                                 <td>
                                     {{item.content}}
@@ -59,28 +59,39 @@
         name: "Distributed",
         data(){
             return{
-                journal:[]
+                journal:[],
+                stompClient:''
             }
         },
         created(){
-            const socket = new SockJS( 'http://localhost:8090/websocket_entry');
+            var that = this;
+            // function send() {
+            //     console.log(1);
+            //     that.stompClient.send("/tape_warning_log");
+            //
+            // }
+
+            const socket = new SockJS( '/websocket_entry');
             this.stompClient = Stomp.over(socket);
             this.stompClient.connect({}, frame => {
                 console.log('Connected: ' + frame);
-                this.stompClient.subscribe('/log/diskWarningLog',res => {
-                        let journal = JSON.parse(res.body);
-                        if (journal.content !== null ){
-                            this.journal.push(journal);
-                        }
 
-                    }
-                );
+                this.stompClient.subscribe('/log/disk_warning_log',res => {
+                    let temp = JSON.parse(res.body);
+                    this.journal = temp.journal;
+                });
+
             });
+
+            setTimeout(function () {
+                that.stompClient.send("/app/disk_warning_log");
+            },500);
 
         },
 
         beforeDestroy(){
             this.disconnect();
+            clearInterval(this.polling);
         },
         methods:{
 
