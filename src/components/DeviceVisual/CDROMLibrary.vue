@@ -217,6 +217,7 @@
                 const that = this;
                 this.poolMsg.poollist.forEach((item,index) => {
                     this.poolMsg.poollist[index].value = 1;
+
                 });
 
                 let pie2 = this.$echarts.init(document.getElementById('pie2'));

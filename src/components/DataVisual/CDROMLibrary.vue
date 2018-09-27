@@ -21,20 +21,22 @@
                                 :props="defaultProps"
                                 :load="loadNode"
                                 lazy
+                                @node-click="handleNodeClick"
                             >
                             </el-tree>
                         </div>
                         <div class="file">
-                            <div id="pie" v-if=show></div>
+                            <div class="charts" v-if=show>
+                                <div id="pie"></div>
+                                <div id="bar"></div>
+                            </div>
                             <div v-if=!show>
-                                <!--<svg class="icon" aria-hidden="true">-->
-                                <!--<use xlink:href="#icon-doc"></use>-->
-                                <!--</svg>-->
                                 <div class="file-content">
-                                    <img src="../../assets/img/file2.png"/>
-                                    <p>aaa</p>
+                                    <div class="file-in" v-for="item in file">
+                                        <img src="../../assets/img/file2.png"/>
+                                        <p>{{item.name}}</p>
+                                    </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -65,31 +67,46 @@
                     // children: 'children',
                     label: 'name'
                 },
-                idArray: []
+                idArray: [],
+                file:[],
+                disk: [
+                    {
+                        "name": "",
+                        "cpuType": "",
+                        "cpuCount": "",
+                        "memCapacity": "",
+                        "hardDiskCount": "",
+                        "status": ""  //1在线 0离线
+                    }
+                ],
             };
         },
         created(){
             this.$ajax.get(process.env.API_HOST + 'api/dashboard/disk/hosts').then((res) => {
-                console.log(res.data);
-                this.poolMsg = res.data;
-                console.log(this.poolMsg);
-                this.tree = res.data.poolName;
-
-                this.tree.forEach( (item,index)=>{
-                    this.idArray.push(item.id);
-
-                });
-
-                var that = this;
-                setTimeout( () => {
-                    console.log('done');
-                    $('.el-tree-node__content').each(function (index) {
-                        $(this).attr('id',that.idArray[index])
-                    })
-                },500);
-
+                this.$set(this.disk,0,res.data.disk[0]);
                 this.drawpie();
             });
+            // this.$ajax.get(process.env.API_HOST + 'api/dashboard/disk/hosts').then((res) => {
+            //     console.log(res.data);
+            //     this.poolMsg = res.data;
+            //     console.log(this.poolMsg);
+            //     this.tree = res.data.poolName;
+            //
+            //     this.tree.forEach( (item,index)=>{
+            //         this.idArray.push(item.id);
+            //
+            //     });
+            //
+            //     var that = this;
+            //     setTimeout( () => {
+            //         console.log('done');
+            //         $('.el-tree-node__content').each(function (index) {
+            //             $(this).attr('id',that.idArray[index])
+            //         })
+            //     },500);
+            //
+            //     this.drawpie();
+            // });
         },
         // mounted(){
         //     console.log($('.el-tree-node__content'))
@@ -106,77 +123,86 @@
 
             drawpie(){
                 const that = this;
-                this.poolMsg.poolName.forEach((item,index) => {
-                    this.poolMsg.poolName[index].value = 1;
+                this.disk.forEach((item,index) => {
+                    this.disk[index].value = 1;
+                    this.disk[index].label = {
+                        formatter:params => {
+                            let res = '名称:'+params.name + '\n';
+                            res += '内存：' + this.disk[index].memCapacity + 'GB\n';
+                            return res;
+                        },
+                        fontSize:16,
+
+                    };
                 });
 
                 let pie = this.$echarts.init(document.getElementById('pie'));
 
-                let option2 = {
+                let option1 = {
+
                     series:[
                         {
                             type:'pie',
-                            radius:['20%','40%'],
-                            // color: ['#dd6b66','#759aa0','#e69d87','#8dc1a9','#ea7e53','#eedd78'],
+                            radius:['15%','35%'],
+                            color: ['#dd6b66','#759aa0','#e69d87','#8dc1a9','#ea7e53','#eedd78'],
                             label:{
-                                show:false
+
                             },
-                            data:that.poolMsg.poolName
+                            data:that.disk
                         }
                     ],
 
                     tooltip:{
-                        formatter:'存储池名称:{b}'
+                        formatter:'主机名:{b}'
                     }
                 };
 
-                pie.setOption(option2);
+                pie.setOption(option1);
 
-                //点击饼图获取展开存储池列表
-                // this.poolMsg.poolName.forEach( item => {
-                //     pie.on('click',  params => {
-                //         var that = this;
-                //         this.poolid = params.data.id;
+                //点击饼图显示对应主机信息
+                // this.colonyMsg.colony.forEach( item => {
+                //     pie.on('click', params => {
                 //         if(params.name === item.name ){
-                //
-                //             console.log(item.id);
-                //
-                //             for (let i=0; i<this.idArray.length; i++){
-                //                 let a = this.idArray[i];
-                //                 console.log($("#"+a).attr('id'))
-                //                 if(item.id == $("#"+a).attr('id')){
-                //                     $("#"+a).click();
-                //                 }
+                //             this.show1 = !this.show1;
+                //             if (that.show1 === false){
+                //                 this.$ajax.get(process.env.API_HOST + 'api/device/distribute/host?deviceId=' + params.data.id) .then( res =>{
+                //                     this.$set(this.host,0,res.data.host[0]);
+                //                 });
                 //             }
                 //         }
                 //     });
                 // });
-
-                window.onresize = function(){
-                    pie.resize();
-                }
             },
-            // handleNodeClick(data,node,self) {
-            //     console.log(data);
-            //     this.$ajax(process.env.API_HOST + 'api/dashboard/distribute/rootdirs').then(res => {
-            //         //             console.log(res.data.folder);
-            //         //             resolve(res.data.folder)
-            //         })
-            // },
+
             loadNode(node,resolve){
                 if (node.level === 0) {
-                    return resolve([]);
-                } else if (node.level === 1) {
-                    this.$ajax(process.env.API_HOST + 'api/dashboard/distribute/rootdirs').then(res => {
+                    this.$ajax.get(process.env.API_HOST + 'api/dashboard/disk/rootdirs').then(res => {
                         console.log(res.data.folder);
                         resolve(res.data.folder);
-                        // this.show = !this,show;
                     })
-                } else {
-                    this.$ajax(process.env.API_HOST + 'api/dashboard/distribute/rootdirs').then(res => {
+                }
+                else {
+                    if (node.level === 1){
+                        this.show = false;
+                    }
+                    console.log(node.data.path)
+
+                    // node.data.path = node.data.path.replace(/\\/g, "\\\\");
+
+                    this.$ajax.get(process.env.API_HOST + 'api/dashboard/disk/dirs?path='+ node.data.path).then(res => {
                         console.log(res.data.folder);
                         resolve(res.data.folder);
-                        this.show = !this,show;
+                    });
+                }
+            },
+
+
+            handleNodeClick(data,node,self) {
+                console.log(1);
+                if (node.level >1){
+                    this.$ajax.get(process.env.API_HOST + 'api/dashboard/disk/files?path='+ node.data.path).then(res => {
+                        this.file = res.data.file;
+                        console.log(this.file)
                     })
                 }
             },
@@ -196,31 +222,48 @@
         float: left;
         width: 70%;
         height: 100%;
+        overflow-y: auto;
     }
     .el-tree {
         font-size: 15px;
     }
-    .file {
+    /*.file {*/
+    /*display: flex;*/
+    /*flex-wrap: wrap;*/
+    /*align-items: flex-start;*/
+    /*align-content: flex-start;*/
+    /*}*/
+    .file-content {
         display: flex;
         flex-wrap: wrap;
         align-items: flex-start;
         align-content: flex-start;
-    }
-    .file-content {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin: 20px 0 0 40px;
+
     }
     .file-content img {
         width: 55px;
     }
     .file-content p {
         font-size: 15px;
+        text-align: center;
+        width: 90px;
+        word-wrap: break-word;
+    }
+    .file-in {
+        display: flex;
+        flex-direction: column;
+        margin: 20px 0 0 40px;
+        align-items: center;
     }
 
-    #pie {
+    .charts {
         width: 100%;
+        height: 100%;
+    }
+
+    #pie,#bar {
+        float: left;
+        width: 50%;
         height: 100%;
     }
 

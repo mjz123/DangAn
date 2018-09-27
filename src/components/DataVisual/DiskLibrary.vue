@@ -21,6 +21,7 @@
                                 :props="defaultProps"
                                 :load="loadNode"
                                 lazy
+                                @node-click="handleNodeClick"
                             >
                             </el-tree>
                         </div>
@@ -30,12 +31,13 @@
                                 <div id="bar"></div>
                             </div>
                             <div v-if=!show>
-                                <!--<svg class="icon" aria-hidden="true">-->
-                                <!--<use xlink:href="#icon-doc"></use>-->
-                                <!--</svg>-->
                                 <div class="file-content">
-                                    <img src="../../assets/img/file2.png"/>
-                                    <p>aaa</p>
+
+                                    <div class="file-in" v-for="item in file">
+                                        <img src="../../assets/img/file2.png"/>
+                                        <p>{{item.name}}</p>
+                                    </div>
+
                                 </div>
 
                             </div>
@@ -69,7 +71,8 @@
                     label: 'name'
                 },
                 poolMsg:{},
-                idArray: []
+                idArray: [],
+                file:[]
             };
         },
         created(){
@@ -186,11 +189,11 @@
 
                 let option = {
                     grid:{
-                        top:'25%',
-                        height:'50%'
+                        top:'15%',
+                        height:'70%'
                     },
                     legend: {
-                        top:'18%',
+                        top:'5%',
                         // data:['邮件营销','联盟广告','视频广告']
                     },
                     tooltip: {},
@@ -236,16 +239,33 @@
                 if (node.level === 0) {
                     return resolve([]);
                 } else if (node.level === 1) {
-                    this.$ajax(process.env.API_HOST + 'api/dashboard/distribute/rootdirs').then(res => {
+
+                    this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/rootdirs').then(res => {
                         console.log(res.data.folder);
                         resolve(res.data.folder);
-                        // this.show = !this,show;
+
                     })
-                } else {
-                    this.$ajax(process.env.API_HOST + 'api/dashboard/distribute/rootdirs').then(res => {
+                }
+                else {
+                    if (node.level === 2){
+                        this.show = false;
+                    }
+
+                    // node.data.path = node.data.path.replace(/\\/g, "\\\\");
+
+                    this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/dirs?path='+ node.data.path).then(res => {
                         console.log(res.data.folder);
                         resolve(res.data.folder);
-                        this.show = !this,show;
+                    });
+                }
+            },
+
+            handleNodeClick(data,node,self) {
+                console.log(1);
+                if (node.level >1){
+                    this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/files?path='+ node.data.path).then(res => {
+                        this.file = res.data.file;
+                        console.log(this.file)
                     })
                 }
             },
@@ -275,29 +295,38 @@
         float: left;
         width: 70%;
         height: 100%;
+        overflow-y: auto;
     }
     .el-tree {
         font-size: 15px;
     }
-    .file {
+    /*.file {*/
+        /*display: flex;*/
+        /*flex-wrap: wrap;*/
+        /*align-items: flex-start;*/
+        /*align-content: flex-start;*/
+    /*}*/
+    .file-content {
         display: flex;
         flex-wrap: wrap;
         align-items: flex-start;
         align-content: flex-start;
-    }
-    .file-content {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin: 20px 0 0 40px;
     }
     .file-content img {
         width: 55px;
     }
     .file-content p {
         font-size: 15px;
+        text-align: center;
+        width: 90px;
+        word-wrap: break-word;
     }
-
+    .file-in {
+        display: flex;
+        flex-direction: column;
+        margin: 20px 0 0 40px;
+        align-items: center;
+    }
     .charts {
         width: 100%;
         height: 100%;

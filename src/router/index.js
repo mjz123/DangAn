@@ -44,17 +44,17 @@ export default new Router({
                 component: DataVisual,
                 children:[
                     {
-                        path: '/DataVisual/Distributed',
+                        path: 'Distributed',
                         name: 'DistributedData',
                         component: DistributedData,
                     },
                     {
-                        path: '/DataVisual/DiskLibrary',
+                        path: 'DiskLibrary',
                         name: 'DiskLibraryData',
                         component: DiskLibraryData,
                     },
                     {
-                        path: '/DataVisual/CDROMLibrary',
+                        path: 'CDROMLibrary',
                         name: 'CDROMLibraryData',
                         component: CDROMLibraryData,
                     }
@@ -66,17 +66,17 @@ export default new Router({
                 component: DeviceVisual,
                 children:[
                     {
-                        path: '/DeviceVisual/Distributed',
+                        path: 'Distributed',
                         name: 'DistributedDevice',
                         component: DistributedDevice,
                     },
                     {
-                        path: '/DeviceVisual/DiskLibrary',
+                        path: 'DiskLibrary',
                         name: 'DiskLibraryDevice',
                         component: DiskLibraryDevice,
                     },
                     {
-                        path: '/DeviceVisual/CDROMLibrary',
+                        path: 'CDROMLibrary',
                         name: 'CDROMLibraryDevice',
                         component: CDROMLibraryDevice,
                     }
@@ -93,17 +93,17 @@ export default new Router({
                 component: Journal,
                 children:[
                     {
-                        path: '/Journal/Distributed',
+                        path: 'Distributed',
                         name: 'DistributedJou',
                         component: DistributedJou,
                     },
                     {
-                        path: '/Journal/DiskLibrary',
+                        path: 'DiskLibrary',
                         name: 'DiskLibraryJou',
                         component: DiskLibraryJou,
                     },
                     {
-                        path: '/Journal/CDROMLibrary',
+                        path: 'CDROMLibrary',
                         name: 'CDROMLibraryJou',
                         component: CDROMLibraryJou,
                     }

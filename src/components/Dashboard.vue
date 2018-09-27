@@ -250,7 +250,7 @@
                                         formatter:function (params) {
                                             let res = params.name + '<br/>';
                                             for (let i=0; i<that.devices[0].data.length; i++){
-                                                res += that.devices[0].data[i].poolName + '总容量'+ Math.ceil(that.devices[0].data[i].capacity*100)/100 + 'T 可用容量' + Math.ceil(that.devices[0].data[i].usedCapacity*100)/100 + 'T<br/>';
+                                                res += '总容量'+ Math.ceil(that.devices[0].data[i].capacity*100)/100 + 'T 可用容量' + Math.ceil(that.devices[0].data[i].usedCapacity*100)/100 + 'T<br/>';
                                             }
                                             return res;
                                         }
