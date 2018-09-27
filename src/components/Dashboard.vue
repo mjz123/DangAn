@@ -1,9 +1,9 @@
 <template>
-    <div class="dash">
-        <div class="sub-nav">
-            <ul></ul>
-        </div>
-        <div class="dashboard-wrapper">
+    <div class="wrap-fluid">
+        <!--<div class="sub-nav">-->
+            <!--<ul></ul>-->
+        <!--</div>-->
+        <div class="container-fluid paper-wrap bevel tlbr">
             <div class="left-sidebar">
                 <div class="row-fluid view">
                     <div class="widget">
@@ -39,7 +39,7 @@
                                         </div>
                                     </div>
                                     <div class="metro-nav-block" style="background: #ffb400">
-                                        <div class="nav-img">     ,
+                                        <div class="nav-img">
                                             <img src="../assets/img/tape2.png"/></div>
                                         <div class="nav-msg">
                                             <div><span>{{data.tapecapacity}}</span>个</div>
@@ -307,6 +307,7 @@
     .view {
         float: left;
         width: 34%;
+        height: 100%;
     }
     .status {
         float: right;
@@ -319,14 +320,11 @@
     }
     .fuwu {
         width: 70%;
-        max-height: 100%;
+        max-height: 90%;
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%,-50%);
-    }
-    .metro-nav-block {
-        box-shadow: 3px 3px 8px #757272;
     }
     .metro-nav {
         overflow: hidden;
@@ -339,6 +337,7 @@
     .metro-nav-block {
         display: flex;
         align-items: center;
+        box-shadow: 3px 3px 8px #757272;
     }
     .nav-img {
         width: 30%;
@@ -400,4 +399,66 @@
     }
 
 
+    .wrap-fluid {
+        height: calc(100% - 200px);
+    }
+
+    .left-sidebar {
+        height: 100%;
+    }
+    .left-sidebar .widget {
+        background: #fafafa;
+        border: 1px solid #e0dede;
+        clear: both;
+        /*margin-top: 0px;*/
+        /*margin-bottom: 30px;*/
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        height: calc(100% - 40px);
+        margin: 20px 0;
+    }
+    .left-sidebar .widget .widget-header {
+        background-color: #eaeaea;
+        /* Fallback Color */
+        background-image: -webkit-gradient(linear, left top, left bottom, from(#fdfdfd), to(#eaeaea));
+        /* Saf4+, Chrome */
+        background-image: -webkit-linear-gradient(top, #fdfdfd, #eaeaea);
+        /* Chrome 10+, Saf5.1+, iOS 5+ */
+        background-image: -moz-linear-gradient(top, #fdfdfd, #eaeaea);
+        /* FF3.6 */
+        background-image: -ms-linear-gradient(top, #fdfdfd, #eaeaea);
+        /* IE10 */
+        background-image: -o-linear-gradient(top, #fdfdfd, #eaeaea);
+        /* Opera 11.10+ */
+        background-image: linear-gradient(top, #fdfdfd, #eaeaea);
+        -webkit-border-radius: 2px 2px 0 0;
+        -moz-border-radius: 2px 2px 0 0;
+        border-radius: 2px 2px 0 0;
+        border-bottom: 1px solid #e0dede;
+        height: 24px;
+        line-height: 24px;
+        padding: 10px; }
+    .left-sidebar .widget .widget-header .title {
+        color: #333333;
+        float: left;
+        font-weight: bold;
+        font-size: 16px; }
+    .metro-nav .metro-nav-block {
+        /*display: block;*/
+        float: left;
+        height: 70px;
+        width: 30.3%;
+        cursor: pointer;
+        text-decoration: none;
+        color: white;
+        overflow: hidden;
+        position: relative;
+        font-weight: 300;
+        letter-spacing: 0.02em;
+        line-height: 20px;
+        font-smooth: always;
+        margin: 0 2% 3% 3px;
+        overflow: hidden;
+        z-index: 1; }
 </style>
