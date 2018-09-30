@@ -120,7 +120,7 @@
         background: rgba(0, 0, 0, 0.1)  none repeat scroll 0px 0px;
     }
     .top-nav ul li a {
-        height:43px;
+        /*height:43px;*/
         text-decoration:none;
     }
     /*.navigation {*/

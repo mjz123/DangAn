@@ -88,6 +88,22 @@
                                     <div id="pie"></div>
                                 </div>
                                 <div class="status-form">
+                                    <!--<el-table-->
+                                        <!--:data="warningMsg"-->
+                                        <!--border-->
+                                        <!--style="width: 100%">-->
+                                        <!--<el-table-column-->
+                                            <!--prop="name"-->
+                                            <!--label="设备名称"-->
+                                            <!--width="180">-->
+                                        <!--</el-table-column>-->
+                                        <!--<el-table-column-->
+                                            <!--prop="status"-->
+                                            <!--label="设备状态"-->
+                                            <!--width="180">-->
+                                        <!--</el-table-column>-->
+
+                                    <!--</el-table>-->
                                     <table class="table table-condensed table-striped table-bordered table-hover">
                                         <thead>
                                             <tr>
@@ -179,15 +195,15 @@
                 polling:'',
                 warningMsg:[
                     {
-                        "name": "distributed",
+                        "name": "分布式存储",
                         "status": 0			//0为正常 1为警告
                     },
                     {
-                        "name": "tape",
+                        "name": "磁带库存储",
                         "status": 0			//0为正常 1为警告
                     },
                     {
-                        "name": "disk",
+                        "name": "光盘库存储",
                         "status": 0			//0为正常 1为警告
                     }
                 ]
@@ -314,10 +330,7 @@
         width: 65%;
         height: 100%;
     }
-    .widget-body {
-        height: calc(100% - 61px);
-        position: relative;
-    }
+
     .fuwu {
         width: 70%;
         max-height: 90%;
@@ -329,7 +342,7 @@
     .metro-nav {
         overflow: hidden;
         width: 80%;
-        height: 40%;
+        height: 45%;
         margin: 0 auto;
         position:  relative;
     }
@@ -397,14 +410,9 @@
     .nav-img img {
         padding-left: 10px;
     }
-
-
+    
     .wrap-fluid {
-        height: calc(100% - 200px);
-    }
-
-    .left-sidebar {
-        height: 100%;
+        height: calc(100% - 190px);
     }
     .left-sidebar .widget {
         background: #fafafa;
@@ -415,35 +423,35 @@
         -webkit-border-radius: 3px;
         -moz-border-radius: 3px;
         border-radius: 3px;
-        height: calc(100% - 40px);
-        margin: 20px 0;
+        /*height: calc(100% - 40px);*/
+        /*margin: 20px 0;*/
     }
-    .left-sidebar .widget .widget-header {
-        background-color: #eaeaea;
-        /* Fallback Color */
-        background-image: -webkit-gradient(linear, left top, left bottom, from(#fdfdfd), to(#eaeaea));
-        /* Saf4+, Chrome */
-        background-image: -webkit-linear-gradient(top, #fdfdfd, #eaeaea);
-        /* Chrome 10+, Saf5.1+, iOS 5+ */
-        background-image: -moz-linear-gradient(top, #fdfdfd, #eaeaea);
-        /* FF3.6 */
-        background-image: -ms-linear-gradient(top, #fdfdfd, #eaeaea);
-        /* IE10 */
-        background-image: -o-linear-gradient(top, #fdfdfd, #eaeaea);
-        /* Opera 11.10+ */
-        background-image: linear-gradient(top, #fdfdfd, #eaeaea);
-        -webkit-border-radius: 2px 2px 0 0;
-        -moz-border-radius: 2px 2px 0 0;
-        border-radius: 2px 2px 0 0;
-        border-bottom: 1px solid #e0dede;
-        height: 24px;
-        line-height: 24px;
-        padding: 10px; }
-    .left-sidebar .widget .widget-header .title {
-        color: #333333;
-        float: left;
-        font-weight: bold;
-        font-size: 16px; }
+    /*.left-sidebar .widget .widget-header {*/
+        /*background-color: #eaeaea;*/
+        /*!* Fallback Color *!*/
+        /*background-image: -webkit-gradient(linear, left top, left bottom, from(#fdfdfd), to(#eaeaea));*/
+        /*!* Saf4+, Chrome *!*/
+        /*background-image: -webkit-linear-gradient(top, #fdfdfd, #eaeaea);*/
+        /*!* Chrome 10+, Saf5.1+, iOS 5+ *!*/
+        /*background-image: -moz-linear-gradient(top, #fdfdfd, #eaeaea);*/
+        /*!* FF3.6 *!*/
+        /*background-image: -ms-linear-gradient(top, #fdfdfd, #eaeaea);*/
+        /*!* IE10 *!*/
+        /*background-image: -o-linear-gradient(top, #fdfdfd, #eaeaea);*/
+        /*!* Opera 11.10+ *!*/
+        /*background-image: linear-gradient(top, #fdfdfd, #eaeaea);*/
+        /*-webkit-border-radius: 2px 2px 0 0;*/
+        /*-moz-border-radius: 2px 2px 0 0;*/
+        /*border-radius: 2px 2px 0 0;*/
+        /*border-bottom: 1px solid #e0dede;*/
+        /*height: 24px;*/
+        /*line-height: 24px;*/
+        /*padding: 10px; }*/
+    /*.left-sidebar .widget .widget-header .title {*/
+        /*color: #333333;*/
+        /*float: left;*/
+        /*font-weight: bold;*/
+        /*font-size: 16px; }*/
     .metro-nav .metro-nav-block {
         /*display: block;*/
         float: left;

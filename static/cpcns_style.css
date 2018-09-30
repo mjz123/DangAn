@@ -1071,3 +1071,18 @@ input[type="text"]:focus{
 	background-color:#f8f8f8;
 	width:20px;
 }
+
+.dash {
+    height: calc(100% - 230px);
+}
+ .row-fluid, .widget {
+    height: 100%;
+}
+.left-sidebar {
+    margin:25px 0;
+    height: calc(100% - 50px);
+}
+.widget-body {
+    height: calc(100% - 44px);
+    position: relative;
+}

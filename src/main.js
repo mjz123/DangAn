@@ -9,10 +9,13 @@ import 'bootstrap/dist/js/bootstrap.min.js'
 import axios from 'axios'
 import echarts from 'echarts'
 
-import { Tree,Pagination } from 'element-ui'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap/dist/js/bootstrap.min.js'
+import { Tree,Pagination,Table } from 'element-ui'
 
 Vue.use(Tree);
 Vue.use(Pagination);
+Vue.use(Table);
 
 Vue.prototype.$echarts = echarts;
 Vue.prototype.$ajax = axios;

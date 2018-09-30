@@ -1,6 +1,7 @@
 <template>
-    <div class="dashboard-wrapper">
-        <div class="left-sidebar">
+    <div class="wrap-fluid">
+        <div class="container-fluid paper-wrap bevel tlbr">
+            <div class="left-sidebar">
             <div class="row-fluid view">
                 <div class="widget">
                     <div class="widget-header">
@@ -84,6 +85,7 @@
                     </div>
                 </div>
             </div>
+        </div>
         </div>
     </div>
 </template>

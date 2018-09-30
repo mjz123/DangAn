@@ -1,16 +1,17 @@
 <template>
-    <div class="dash">
-        <div class="sub-nav">
-            <ul></ul>
-        </div>
-        <div class="dashboard-wrapper">
-            <div class="left-sidebar">
+    <!--<div class="dash">-->
+        <!--<div class="sub-nav">-->
+            <!--<ul></ul>-->
+        <!--</div>-->
+        <div class="wrap-fluid">
+            <div class="container-fluid paper-wrap bevel tlbr">
+                <div class="left-sidebar">
                 <div class="row-fluid view">
                     <div class="widget">
-                        <div class="widget-header">
-                            <div class="title">
-                            </div>
-                        </div>
+                        <!--<div class="widget-header">-->
+                            <!--<div class="title">-->
+                            <!--</div>-->
+                        <!--</div>-->
                         <div class="widget-body">
                             <div class="backimg"></div>
                             <div class="msg">
@@ -34,8 +35,9 @@
                     </div>
                 </div>
             </div>
+            </div>
         </div>
-    </div>
+    <!--</div>-->
 </template>
 
 <script>
@@ -68,11 +70,20 @@
         display: flex;
         flex-direction: column;
         align-items: center;
+        margin-top: 15px;
     }
     .msgbox span{
         margin-top: 5px;
         font-size: 15px;
-
+    }
+    .msgbox img {
+        box-sizing: content-box;
+    }
+    .widget-body {
+        height: 100%;
+    }
+    .wrap-fluid {
+        height: calc(100% - 190px);
     }
 
 

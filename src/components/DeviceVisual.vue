@@ -2,7 +2,6 @@
     <div class="dash">
         <div class="sub-nav">
             <ul>
-
                 <li>
                     <router-link to="/DeviceVisual/Distributed" tag="a">
                         分布式存储
