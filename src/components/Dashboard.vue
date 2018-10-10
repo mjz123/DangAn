@@ -332,7 +332,7 @@
     }
 
     .fuwu {
-        width: 70%;
+
         max-height: 90%;
         position: absolute;
         top: 50%;
@@ -399,6 +399,9 @@
         margin-right: 0;
     }
     .metro-nav-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
         width: 100%;
         position: absolute;
         top: 50%;
@@ -410,7 +413,7 @@
     .nav-img img {
         padding-left: 10px;
     }
-    
+
     .wrap-fluid {
         height: calc(100% - 190px);
     }
@@ -426,32 +429,6 @@
         /*height: calc(100% - 40px);*/
         /*margin: 20px 0;*/
     }
-    /*.left-sidebar .widget .widget-header {*/
-        /*background-color: #eaeaea;*/
-        /*!* Fallback Color *!*/
-        /*background-image: -webkit-gradient(linear, left top, left bottom, from(#fdfdfd), to(#eaeaea));*/
-        /*!* Saf4+, Chrome *!*/
-        /*background-image: -webkit-linear-gradient(top, #fdfdfd, #eaeaea);*/
-        /*!* Chrome 10+, Saf5.1+, iOS 5+ *!*/
-        /*background-image: -moz-linear-gradient(top, #fdfdfd, #eaeaea);*/
-        /*!* FF3.6 *!*/
-        /*background-image: -ms-linear-gradient(top, #fdfdfd, #eaeaea);*/
-        /*!* IE10 *!*/
-        /*background-image: -o-linear-gradient(top, #fdfdfd, #eaeaea);*/
-        /*!* Opera 11.10+ *!*/
-        /*background-image: linear-gradient(top, #fdfdfd, #eaeaea);*/
-        /*-webkit-border-radius: 2px 2px 0 0;*/
-        /*-moz-border-radius: 2px 2px 0 0;*/
-        /*border-radius: 2px 2px 0 0;*/
-        /*border-bottom: 1px solid #e0dede;*/
-        /*height: 24px;*/
-        /*line-height: 24px;*/
-        /*padding: 10px; }*/
-    /*.left-sidebar .widget .widget-header .title {*/
-        /*color: #333333;*/
-        /*float: left;*/
-        /*font-weight: bold;*/
-        /*font-size: 16px; }*/
     .metro-nav .metro-nav-block {
         /*display: block;*/
         float: left;
@@ -466,7 +443,7 @@
         letter-spacing: 0.02em;
         line-height: 20px;
         font-smooth: always;
-        margin: 0 2% 3% 3px;
+        margin: 0 1% 3% 0;
         overflow: hidden;
         z-index: 1; }
 </style>

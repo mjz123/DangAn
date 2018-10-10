@@ -36,6 +36,14 @@
 
 <style scoped>
     .router-link-active {
-        font-size: 16px;
+        -webkit-border-radius: 4px 4px 0 0;
+        -moz-border-radius: 4px 4px 0 0;
+        border-radius: 4px 4px 0 0;
+        color: rgb(0, 255, 241) !important;
+        opacity: 1;
+        text-shadow: 1px 1px 1px #1f5a80;
+    }
+    a {
+        text-decoration: none;
     }
 </style>

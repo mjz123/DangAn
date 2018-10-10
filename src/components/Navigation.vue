@@ -47,7 +47,7 @@
          <div class="headerDiv">
              <!--左侧logo展示-->
              <div class="logoimg"><img src="../assets/img/logo.png"/></div>
-             <div class="logotext">电子档案基础支撑平台</div>
+             <div class="logotext">多介质存储管理系统</div>
          </div>
          <!--------头部信息结束------------->
          <div class="menus">
@@ -143,27 +143,13 @@
         /*background: #3693cf;*/
         /*color: #fff;*/
         /*text-shadow: 1px 1px 1px #1f5a80; }*/
-
-    /*@font-face {*/
-        /*font-family: 'icomoon';*/
-        /*src:url('../assets/fonts/icomoon.eot');*/
-        /*src:url('../assets/fonts/icomoon.eot?#iefix') format('embedded-opentype'),*/
-        /*url('../assets/fonts/icomoon.woff') format('woff'),*/
-        /*url('../assets/fonts/icomoon.ttf') format('truetype'),*/
-        /*url('../assets/fonts/icomoon.svg#icomoon') format('svg');*/
-        /*font-weight: normal;*/
-        /*font-style: normal;*/
-    /*}*/
-
-    /*!* Use the following CSS code if you want to use data attributes for inserting your icons *!*/
-    /*[data-icon]:before {*/
-        /*font-family: 'icomoon';*/
-        /*content: attr(data-icon);*/
-        /*speak: none;*/
-        /*font-weight: normal;*/
-        /*font-size:  16px;*/
-        /*line-height: 16px;*/
-        /*line-height: 1;*/
-        /*-webkit-font-smoothing: antialiased;*/
-    /*}*/
+    .top-nav ul li a.router-link-active {
+        -webkit-border-radius: 4px 4px 0 0;
+        -moz-border-radius: 4px 4px 0 0;
+        border-radius: 4px 4px 0 0;
+        background:rgba(0, 0, 0, 0.1);
+        color: rgb(0, 255, 241) !important;
+        opacity: 1;
+        text-shadow: 1px 1px 1px #1f5a80;
+    }
 </style>
