@@ -1086,3 +1086,7 @@ input[type="text"]:focus{
     height: calc(100% - 44px);
     position: relative;
 }
+
+.table td, .table th {
+    padding: 2px!important;
+}

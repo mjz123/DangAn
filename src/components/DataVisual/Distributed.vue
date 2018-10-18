@@ -33,8 +33,12 @@
                             </div>
                             <div v-if=!show>
                                 <div class="file-content">
+                                    <div class="file-in" v-for="item in folder">
+                                        <img src="../../assets/img/jia2.jpg"/>
+                                        <p>{{item.name}}</p>
+                                    </div>
                                     <div class="file-in" v-for="item in file">
-                                        <img src="../../assets/img/file2.png"/>
+                                        <img src="../../assets/img/dangan.jpg"/>
                                         <p>{{item.name}}</p>
                                     </div>
                                 </div>
@@ -71,7 +75,8 @@
                 },
                 poolMsg:{},
                 idArray: [],
-                file:[]
+                file:[],
+                folder:[],
             };
         },
         created(){
@@ -254,7 +259,8 @@
 
                     this.$ajax.get(process.env.API_HOST + 'api/dashboard/distribute/dirs?path='+ node.data.path).then(res => {
                         console.log(res.data.folder);
-                        resolve(res.data.folder);
+                        this.folder = res.data.folder;
+                        resolve(this.folder);
                     });
                 }
             },
@@ -263,9 +269,11 @@
             handleNodeClick(data,node,self) {
                 console.log(1);
                 if (node.level >1){
+                    this.$ajax.get(process.env.API_HOST + 'api/dashboard/distribute/dirs?path='+ node.data.path).then(res => {
+                        this.folder = res.data.folder;
+                    });
                     this.$ajax.get(process.env.API_HOST + 'api/dashboard/distribute/files?path='+ node.data.path).then(res => {
                         this.file = res.data.file;
-                        console.log(this.file)
                     })
                 }
             },

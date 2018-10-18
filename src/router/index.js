@@ -8,6 +8,7 @@ import DeviceVisual from '@/components/DeviceVisual'
 import DistributedData from '@/components/DataVisual/Distributed'
 import DiskLibraryData from '@/components/DataVisual/DiskLibrary'
 import CDROMLibraryData from '@/components/DataVisual/CDROMLibrary'
+import Ofd from '@/components/DataVisual/Ofd'
 
 import DistributedDevice from '@/components/DeviceVisual/Distributed'
 import DiskLibraryDevice from '@/components/DeviceVisual/DiskLibrary'
@@ -28,6 +29,11 @@ export default new Router({
     {path: '/DeviceVisual', redirect: '/DeviceVisual/Distributed'},
       {path: '/DataVisual', redirect: '/DataVisual/Distributed'},
       {path: '/Journal', redirect: '/Journal/Distributed'},
+      {
+          path: '/Ofd',
+          name: 'Ofd',
+          component: Ofd,
+      },
     {
         path: '/Navigation',
         name: 'Navigation',

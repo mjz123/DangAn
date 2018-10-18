@@ -635,11 +635,11 @@
         width: 45%;
         height: 100%;
     }
-    #line{
+    #line {
         width: 100%;
         height: 100%;
     }
-    h5{
+    h5 {
         margin-left: 10%;
     }
     th,td{
@@ -655,5 +655,7 @@
         width: 80%;
         margin: 10px auto;
     }
-
+    p {
+        margin-bottom: 7px;
+    }
 </style>

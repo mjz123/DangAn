@@ -8,7 +8,7 @@
                         <div class="title">
                             光盘库存储
                         </div>
-                        <span class="tools" >
+                        <span class="tools">
                           <a class="fs1 icon-cog" aria-hidden="true"></a>
                         </span>
                     </div>
@@ -32,10 +32,21 @@
                                 <div id="bar"></div>
                             </div>
                             <div v-if=!show>
+
                                 <div class="file-content">
-                                    <div class="file-in" v-for="item in file">
-                                        <img src="../../assets/img/file2.png"/>
+                                    <div class="file-in" v-for="item in folder">
+                                        <img src="../../assets/img/jia2.jpg"/>
                                         <p>{{item.name}}</p>
+                                    </div>
+                                    <div class="file-in" v-for="item in file">
+                                        <img src="../../assets/img/dangan.jpg"/>
+                                        <p>{{item.name}}</p>
+                                        <div class="xiazai">
+                                            <div>
+                                                <button>下载</button><br>
+                                                <button @click="view()">预览</button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -71,6 +82,7 @@
                 },
                 idArray: [],
                 file:[],
+                folder:[],
                 disk: [
                     {
                         "name": "",
@@ -114,13 +126,34 @@
         //     console.log($('.el-tree-node__content'))
         // },
         methods: {
+            view(){
+                this.$router.push({name:'Ofd'})
+            },
+
             renderContent(h, { node, data, store }) {
+
+                // if (node.level===1){
+                //     return (
+                //         <span class="custom-tree-node" style="display:flex; align-items:center">
+                //         <img src="../../../static/img/file.png" style="width: 20px; padding-right: 6px"/>
+                //         <span>{node.label}</span>
+                //     </span>
+                // );
+                // } else {
+                //     return (
+                //         <span class="custom-tree-node" style="display:flex; align-items:center">
+                //         <img src="../../../static/img/jia2.jpg" style="width: 20px; padding-right: 6px"/>
+                //         <span>{node.label}</span>
+                //     </span>
+                // );
+                // }
                 return (
                     <span class="custom-tree-node" style="display:flex; align-items:center">
                     <img src="../../../static/img/file.png" style="width: 20px; padding-right: 6px"/>
                     <span>{node.label}</span>
                 </span>
             );
+
             },
 
             drawpie(){
@@ -178,6 +211,7 @@
 
             loadNode(node,resolve){
                 if (node.level === 0) {
+
                     this.$ajax.get(process.env.API_HOST + 'api/dashboard/disk/rootdirs').then(res => {
                         console.log(res.data.folder);
                         resolve(res.data.folder);
@@ -187,13 +221,14 @@
                     if (node.level === 1){
                         this.show = false;
                     }
-                    console.log(node.data.path)
+                    console.log(node)
 
                     // node.data.path = node.data.path.replace(/\\/g, "\\\\");
 
                     this.$ajax.get(process.env.API_HOST + 'api/dashboard/disk/dirs?path='+ node.data.path).then(res => {
                         console.log(res.data.folder);
-                        resolve(res.data.folder);
+                        this.folder = res.data.folder;
+                        resolve(this.folder);
                     });
                 }
             },
@@ -201,11 +236,14 @@
 
             handleNodeClick(data,node,self) {
                 console.log(1);
-                if (node.level >1){
+                if (node.level > 0){
                     this.$ajax.get(process.env.API_HOST + 'api/dashboard/disk/files?path='+ node.data.path).then(res => {
                         this.file = res.data.file;
-                        console.log(this.file)
-                    })
+                    });
+
+                    this.$ajax.get(process.env.API_HOST + 'api/dashboard/disk/dirs?path='+ node.data.path).then(res => {
+                        this.folder = res.data.folder;
+                    });
                 }
             },
 
@@ -256,8 +294,34 @@
         flex-direction: column;
         margin: 20px 0 0 40px;
         align-items: center;
+        position: relative;
+    }
+    .xiazai {
+        display: none;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        /*top: 50%;*/
+        /*left: 50%;*/
+        /*transform: translate(-50%,-50%);*/
+        background: rgba(0,0,0,0.5);
+    }
+    .xiazai div{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        -moz-transform: translate(-50%,-50%);
+    }
+    .xiazai button {
+        margin: 3px 0;
     }
 
+    .file-in:hover .xiazai {
+        display: block;
+    }
     .charts {
         width: 100%;
         height: 100%;

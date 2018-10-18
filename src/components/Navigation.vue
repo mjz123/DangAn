@@ -73,6 +73,12 @@
                          </router-link>
                      </li>
                      <li>
+                         <router-link to="/FourProperties" tag="a">
+                             <div class="fs1 icon-search" aria-hidden="true"></div>
+                             四性检测
+                         </router-link>
+                     </li>
+                     <li>
                          <router-link to="/Journal" tag="a">
                              <div class="fs1 icon-file-3" aria-hidden="true"></div>
                              系统日志
@@ -152,4 +158,6 @@
         opacity: 1;
         text-shadow: 1px 1px 1px #1f5a80;
     }
+
+
 </style>

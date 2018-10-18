@@ -737,5 +737,8 @@
         width: 80%;
         margin: 10px auto;
     }
+    p {
+        margin-bottom: 7px;
+    }
 
 </style>

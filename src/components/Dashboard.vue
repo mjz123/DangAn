@@ -446,4 +446,7 @@
         margin: 0 1% 3% 0;
         overflow: hidden;
         z-index: 1; }
+        .table td, .table th {
+            padding: 10px!important;
+        }
 </style>

@@ -33,9 +33,12 @@
                             </div>
                             <div v-if=!show>
                                 <div class="file-content">
-
+                                    <div class="file-in" v-for="item in folder">
+                                        <img src="../../assets/img/jia2.jpg"/>
+                                        <p>{{item.name}}</p>
+                                    </div>
                                     <div class="file-in" v-for="item in file">
-                                        <img src="../../assets/img/file2.png"/>
+                                        <img src="../../assets/img/dangan.jpg"/>
                                         <p>{{item.name}}</p>
                                     </div>
 
@@ -74,7 +77,8 @@
                 },
                 poolMsg:{},
                 idArray: [],
-                file:[]
+                file:[],
+                folder:[],
             };
         },
         created(){
@@ -239,35 +243,53 @@
 
             loadNode(node,resolve){
                 if (node.level === 0) {
+                    console.log(node);
                     return resolve([]);
                 } else if (node.level === 1) {
+                    this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/tapelist?path=' + node.data.name).then(res => {
 
-                    this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/rootdirs').then(res => {
-                        console.log(res.data.folder);
-                        resolve(res.data.folder);
-
+                        resolve(res.data.tapes);
                     })
-                }
-                else {
-                    if (node.level === 2){
-                        this.show = false;
-                    }
 
-                    // node.data.path = node.data.path.replace(/\\/g, "\\\\");
-
-                    this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/dirs?path='+ node.data.path).then(res => {
+                }  else if(node.level === 2){
+                    this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/rootdirs?path=' + node.data.name).then(res => {
                         console.log(res.data.folder);
                         resolve(res.data.folder);
+                    })
+                } else if(node.level === 3){
+                    // if (){
+                        this.show = false;
+                    // }
+
+                    this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/dirs?path='+ node.data.name + '&name=' +  node.data.tapeid).then(res => {
+                        console.log(res.data.folder);
+                        this.folder = res.data.folder;
+                        resolve(this.folder);
+                    });
+                } else {
+                    this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/dirs?path='+ node.data.path + '/' + node.data.name + '&name=' +  node.data.tapeid).then(res => {
+                        console.log(res.data.folder);
+                        this.folder = res.data.folder;
+                        resolve(this.folder);
                     });
                 }
             },
 
             handleNodeClick(data,node,self) {
                 console.log(1);
-                if (node.level >1){
-                    this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/files?path='+ node.data.path).then(res => {
+                if (node.level === 3 ){
+                    this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/dirs?path='+ node.data.name + '&name=' +  node.data.tapeid).then(res => {
+                        this.folder = res.data.folder;
+                    });
+                    this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/files?path='+ node.data.name + '&name=' +  node.data.tapeid ).then(res => {
                         this.file = res.data.file;
-                        console.log(this.file)
+                    })
+                } else if (node.level > 3){
+                    this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/dirs?path='+ node.data.path + '/' + node.data.name + '&name=' +  node.data.tapeid).then(res => {
+                        this.folder = res.data.folder;
+                    });
+                    this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/files?path='+ node.data.path + '/' + node.data.name + '&name=' +  node.data.tapeid).then(res => {
+                        this.file = res.data.file;
                     })
                 }
             },
