@@ -9,7 +9,7 @@
                             磁带库存储
                         </div>
                         <span class="tools" >
-                          <a class="fs1 icon-cog" aria-hidden="true"></a>
+                          <a class="fs1 icon-cog" aria-hidden="true" :href=url target="_blank"></a>
                         </span>
                     </div>
                     <div class="widget-body">
@@ -34,12 +34,18 @@
                             <div v-if=!show>
                                 <div class="file-content">
                                     <div class="file-in" v-for="item in folder">
-                                        <img src="../../assets/img/jia2.jpg"/>
+                                        <img src="../../assets/img/dangangui.png"/>
                                         <p>{{item.name}}</p>
                                     </div>
                                     <div class="file-in" v-for="item in file">
-                                        <img src="../../assets/img/dangan.jpg"/>
+                                        <img src="../../assets/img/dangan.png"/>
                                         <p>{{item.name}}</p>
+                                        <div class="xiazai">
+                                            <div>
+                                                <button @click="download(item.fileid,item.name,item.downpath)">下载</button><br>
+                                                <button @click="view(item.fileid,item.name,item.downpath)" v-show="item.name.includes('.ofd')">预览</button>
+                                            </div>
+                                        </div>
                                     </div>
 
                                 </div>
@@ -79,6 +85,7 @@
                 idArray: [],
                 file:[],
                 folder:[],
+                url:''
             };
         },
         created(){
@@ -107,12 +114,25 @@
                 this.drawbar();
             });
 
-
+            this.$ajax.get(process.env.API_HOST + 'api/tape/jump').then(res => {
+                this.url = res.data.weburl;
+            });
         },
         mounted(){
             this.resize();
         },
         methods: {
+            test(){
+                let aaa = {
+                    aa:'11'
+                };
+                sessionStorage.setItem('test',JSON.stringify(aaa));
+                const { href } = this.$router.resolve({
+                    name: 'Download'
+                });
+                window.open(href)
+            },
+
             renderContent(h, { node, data, store }) {
                 return (
                     <span class="custom-tree-node" style="display:flex; align-items:center">
@@ -129,7 +149,7 @@
                     this.poolMsg.poolName[index].label = {
                         formatter:params => {
                             let res = '名称:'+params.name + '\n';
-                            res += '总容量：' + this.poolMsg.poolName[index].capacity + 'T\n'+ '已用容量' + this.poolMsg.poolName[index].used+'T';
+                            res += '总容量：' + this.poolMsg.poolName[index].capacity.toFixed(2) + 'T\n'+ '已用容量' + this.poolMsg.poolName[index].used.toFixed(2)+'T';
                             return res;
                         },
                         fontSize:16,
@@ -145,7 +165,7 @@
                         {
                             type:'pie',
                             radius:['15%','35%'],
-                            // color: ['#dd6b66','#759aa0','#e69d87','#8dc1a9','#ea7e53','#eedd78'],
+                            // color: ['#CD919E','#CD8162','#CD6839','#CD5C5C','#CD2626'],
                             label:{
                                 // formatter:params => {
                                 //     let res = '磁带库名称'+params.name + '\n';
@@ -158,7 +178,7 @@
                             data:that.poolMsg.poolName
                         }
                     ],
-
+                    color: ['#CD919E','#CD8162','#CD6839','#CD5C5C','#CD2626'],
                     tooltip:{
                         formatter:'磁带库名称:{b}'
                     }
@@ -193,21 +213,31 @@
                 const that = this;
                 let bar = this.$echarts.init(document.getElementById('bar'));
 
+                for (let i = 0; i<that.poolMsg.poolName.length; i++){
+                    that.poolMsg.poolName[i]['剩余容量'] = that.poolMsg.poolName[i].free.toFixed(2);
+                    that.poolMsg.poolName[i]['已用容量'] = that.poolMsg.poolName[i].used.toFixed(2);
+                    that.poolMsg.poolName[i]['总容量'] = that.poolMsg.poolName[i].capacity.toFixed(2);
+                }
+
+                console.log(that.poolMsg);
                 let option = {
                     grid:{
                         top:'15%',
                         height:'70%'
                     },
+
                     legend: {
                         top:'5%',
                         // data:['邮件营销','联盟广告','视频广告']
                     },
                     tooltip: {},
                     dataset: {
-                        dimensions: ['name', 'free', 'used', 'capacity'],
+                        dimensions: ['name', '剩余容量', '已用容量', '总容量'],
                         source:that.poolMsg.poolName
                     },
-
+                    label: {
+                        fontsize: 15
+                    },
                     xAxis: {type: 'category'},
                     yAxis: {},
                     series: [
@@ -304,6 +334,31 @@
                 }
             },
 
+            download(fileid,name,downpath){
+                sessionStorage.setItem('fileid',fileid);
+                sessionStorage.setItem('filename2',name);
+                sessionStorage.setItem('downpath',downpath);
+
+                const { href } = this.$router.resolve({
+                    name: 'Download'
+                });
+
+                window.open(href);
+
+            },
+
+            view(fileid,name,downpath){
+
+                sessionStorage.setItem('fileid2',fileid);
+                sessionStorage.setItem('filename3',name);
+                sessionStorage.setItem('downpath2',downpath);
+                const { href } = this.$router.resolve({
+                    name: 'DiskOfd'
+                });
+
+                window.open(href)
+                // this.$router.push({name:'Ofd',params:{path:path,name:name}})
+            }
         }
     }
 </script>
@@ -312,7 +367,7 @@
     .folder {
         width: 30%;
         height: 100%;
-        overflow-y: scroll;
+        overflow: scroll;
         float: left;
     }
     .file {
@@ -338,6 +393,7 @@
     }
     .file-content img {
         width: 55px;
+        height:100px;
     }
     .file-content p {
         font-size: 15px;
@@ -350,12 +406,39 @@
         flex-direction: column;
         margin: 20px 0 0 40px;
         align-items: center;
+        position: relative;
     }
     .charts {
         width: 100%;
         height: 100%;
     }
 
+    .xiazai {
+        display: none;
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        /*top: 50%;*/
+        /*left: 50%;*/
+        /*transform: translate(-50%,-50%);*/
+        background: rgba(0,0,0,0.5);
+    }
+    .xiazai div{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        -moz-transform: translate(-50%,-50%);
+    }
+    .xiazai button {
+        margin: 3px 0;
+    }
+
+    .file-in:hover .xiazai {
+        display: block;
+    }
     #pie,#bar {
         float: left;
         width: 50%;

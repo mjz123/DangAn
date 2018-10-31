@@ -16,7 +16,7 @@ html, body {
 }
 #site-landing {
   position:relative;
-  height: 115%;
+  height: 100%;
   width: 100%;
   overflow: visible;
   background: transparent url("img/bg.jpg") no-repeat fixed center top / cover;
@@ -553,6 +553,7 @@ footer {
   float: left;
   font-weight: bold;
   font-size: 16px;
+    padding-left: 35px;
 }
 .widget .widget-header span.tools {
   padding: 0 5px;
@@ -1079,8 +1080,8 @@ input[type="text"]:focus{
     height: 100%;
 }
 .left-sidebar {
-    margin:25px 0;
-    height: calc(100% - 50px);
+    margin:15px 0;
+    height: calc(100% - 30px);
 }
 .widget-body {
     height: calc(100% - 44px);
@@ -1089,4 +1090,11 @@ input[type="text"]:focus{
 
 .table td, .table th {
     padding: 2px!important;
+}
+
+a {
+    text-decoration: none!important;
+}
+a :hover{
+    text-decoration: none!important;
 }

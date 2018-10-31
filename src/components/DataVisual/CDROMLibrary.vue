@@ -9,7 +9,7 @@
                             光盘库存储
                         </div>
                         <span class="tools">
-                          <a class="fs1 icon-cog" aria-hidden="true"></a>
+                          <a class="fs1 icon-cog" aria-hidden="true" :href=url target="_blank"></a>
                         </span>
                     </div>
                     <div class="widget-body">
@@ -32,19 +32,18 @@
                                 <div id="bar"></div>
                             </div>
                             <div v-if=!show>
-
                                 <div class="file-content">
                                     <div class="file-in" v-for="item in folder">
-                                        <img src="../../assets/img/jia2.jpg"/>
+                                        <img src="../../assets/img/dangangui.png"/>
                                         <p>{{item.name}}</p>
                                     </div>
                                     <div class="file-in" v-for="item in file">
-                                        <img src="../../assets/img/dangan.jpg"/>
+                                        <img src="../../assets/img/dangan.png"/>
                                         <p>{{item.name}}</p>
                                         <div class="xiazai">
                                             <div>
-                                                <button>下载</button><br>
-                                                <button @click="view()">预览</button>
+                                                <button @click="download(item.path,item.name)">下载</button><br>
+                                                <button @click="view(item.path,item.name)" v-show="item.name.includes('.ofd')">预览</button>
                                             </div>
                                         </div>
                                     </div>
@@ -93,6 +92,7 @@
                         "status": ""  //1在线 0离线
                     }
                 ],
+                url:''
             };
         },
         created(){
@@ -100,62 +100,25 @@
                 this.$set(this.disk,0,res.data.disk[0]);
                 this.drawpie();
             });
-            // this.$ajax.get(process.env.API_HOST + 'api/dashboard/disk/hosts').then((res) => {
-            //     console.log(res.data);
-            //     this.poolMsg = res.data;
-            //     console.log(this.poolMsg);
-            //     this.tree = res.data.poolName;
-            //
-            //     this.tree.forEach( (item,index)=>{
-            //         this.idArray.push(item.id);
-            //
-            //     });
-            //
-            //     var that = this;
-            //     setTimeout( () => {
-            //         console.log('done');
-            //         $('.el-tree-node__content').each(function (index) {
-            //             $(this).attr('id',that.idArray[index])
-            //         })
-            //     },500);
-            //
-            //     this.drawpie();
-            // });
+
+            this.$ajax.get(process.env.API_HOST + 'api/disk/jump').then(res => {
+                this.url = res.data.weburl;
+            });
+
         },
-        // mounted(){
-        //     console.log($('.el-tree-node__content'))
-        // },
+
         methods: {
-            view(){
-                this.$router.push({name:'Ofd'})
-            },
-
             renderContent(h, { node, data, store }) {
-
-                // if (node.level===1){
-                //     return (
-                //         <span class="custom-tree-node" style="display:flex; align-items:center">
-                //         <img src="../../../static/img/file.png" style="width: 20px; padding-right: 6px"/>
-                //         <span>{node.label}</span>
-                //     </span>
-                // );
-                // } else {
-                //     return (
-                //         <span class="custom-tree-node" style="display:flex; align-items:center">
-                //         <img src="../../../static/img/jia2.jpg" style="width: 20px; padding-right: 6px"/>
-                //         <span>{node.label}</span>
-                //     </span>
-                // );
-                // }
                 return (
                     <span class="custom-tree-node" style="display:flex; align-items:center">
                     <img src="../../../static/img/file.png" style="width: 20px; padding-right: 6px"/>
                     <span>{node.label}</span>
                 </span>
-            );
+                );
 
             },
 
+            //饼图
             drawpie(){
                 const that = this;
                 this.disk.forEach((item,index) => {
@@ -179,14 +142,14 @@
                         {
                             type:'pie',
                             radius:['15%','35%'],
-                            color: ['#dd6b66','#759aa0','#e69d87','#8dc1a9','#ea7e53','#eedd78'],
+
                             label:{
 
                             },
                             data:that.disk
                         }
                     ],
-
+                    color: ['#CD919E','#CD8162','#CD6839','#CD5C5C','#CD2626'],
                     tooltip:{
                         formatter:'主机名:{b}'
                     }
@@ -209,6 +172,7 @@
                 // });
             },
 
+            //树状文件夹列表
             loadNode(node,resolve){
                 if (node.level === 0) {
 
@@ -234,6 +198,7 @@
             },
 
 
+            //点击树状列表显示对应文件
             handleNodeClick(data,node,self) {
                 console.log(1);
                 if (node.level > 0){
@@ -247,6 +212,26 @@
                 }
             },
 
+            //下载
+            download(path,name){
+                window.open(path + '/' + name);
+            },
+
+            // view(path,name){
+            //     this.$router.push({name:'Ofd',params:{path:path,name:name}})
+            // }
+            //预览
+            view(path,name){
+
+                sessionStorage.setItem('pathname',path);
+                sessionStorage.setItem('filename',name);
+                const { href } = this.$router.resolve({
+                    name: 'Ofd'
+                });
+
+                window.open(href)
+                // this.$router.push({name:'Ofd',params:{path:path,name:name}})
+            }
         }
     }
 </script>
@@ -255,7 +240,7 @@
     .folder {
         width: 30%;
         height: 100%;
-        overflow-y: scroll;
+        overflow: scroll;
         float: left;
     }
     .file {
@@ -282,6 +267,7 @@
     }
     .file-content img {
         width: 55px;
+        height:100px;
     }
     .file-content p {
         font-size: 15px;

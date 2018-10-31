@@ -9,7 +9,7 @@
                             分布式存储
                         </div>
                         <span class="tools">
-                          <a class="fs1 icon-cog" aria-hidden="true"></a>
+                          <a class="fs1 icon-cog" aria-hidden="true" :href=url target="_blank"></a>
                         </span>
                     </div>
                     <div class="widget-body">
@@ -133,7 +133,8 @@
                 totalPage:1,
                 stompClient:'',
                 status:'',
-                polling:''
+                polling:'',
+                url:''
             }
         },
         created(){
@@ -155,6 +156,9 @@
                 this.totalPage = Number(res.data.totalPage);
             });
 
+            this.$ajax.get(process.env.API_HOST + 'api/distribute/jump').then(res => {
+                this.url = res.data.weburl;
+            });
 
         },
         mounted(){
@@ -195,14 +199,16 @@
                         {
                             type:'pie',
                             radius:['40%','65%'],
-                            color: ['#dd6b66','#759aa0','#e69d87','#8dc1a9','#ea7e53','#eedd78'],
+                            // itemStyle:{
+                            //     color: ['#CD919E','#CD8162','#CD6839','#CD5C5C','#CD2626'],
+                            // },
                             label:{
                                 show:false
                             },
                             data:that.colonyMsg.colony
                         }
                     ],
-
+                    color: ['#CD919E','#CD8162','#CD6839','#CD5C5C','#CD2626'],
                     tooltip:{
                         formatter:'主机名:{b}'
                     }
@@ -252,14 +258,14 @@
                         {
                             type:'pie',
                             radius:['40%','65%'],
-                            // color: ['#dd6b66','#759aa0','#e69d87','#8dc1a9','#ea7e53','#eedd78'],
+                            // color: ['#CD919E','#CD8162','#CD6839','#CD5C5C','#CD2626'],
                             label:{
                                 show:false
                             },
                             data:that.poolMsg.poolName
                         }
                     ],
-
+                    color: ['#CD919E','#CD8162','#CD6839','#CD5C5C','#CD2626'],
                     tooltip:{
                         formatter:'存储池名称:{b}'
                     }
@@ -324,6 +330,7 @@
                 // });
             },
 
+            //条形图
             drawline(status,id){
                 let line = this.$echarts.init(document.getElementById('line'));
                 let time = [new Date()];

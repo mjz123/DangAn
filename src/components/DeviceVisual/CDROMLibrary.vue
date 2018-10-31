@@ -9,7 +9,7 @@
                             光盘存储
                         </div>
                         <span class="tools">
-                          <a class="fs1 icon-cog" aria-hidden="true"></a>
+                          <a class="fs1 icon-cog" aria-hidden="true" :href=url target="_blank"></a>
                         </span>
                     </div>
                     <div class="widget-body">
@@ -25,7 +25,7 @@
                                     <!--<p>在线状态：{{disk[0].status | status}}</p>-->
                                 </div>
                             </div>
-                            <div id="pie1"></div>
+                            <div id="diskpie1"></div>
                         </div>
 
                         <div class="widget-body-rg">
@@ -52,7 +52,7 @@
                                     <p>在线状态：{{pool[0].status | status}}</p>
                                 </div>
                             </div>
-                            <div id="pie2"></div>
+                            <div id="diskpie2"></div>
                         </div>
 
                         <div class="widget-body-rg">
@@ -121,21 +121,21 @@
                 diskPage: [],
                 poolid: 0,
                 totalPage:1,
-                polling:''
-
+                polling:'',
+                url:''
             }
         },
         created(){
             //获取光盘库存储系统集群情况
             this.$ajax.get(process.env.API_HOST + 'api/dashboard/disk/hosts').then((res) => {
                 this.$set(this.disk,0,res.data.disk[0]);
-                this.drawpie1();
+                this.drawdiskpie1();
             });
 
             //获取光盘库存储系统磁带匣总体概况
             this.$ajax.get(process.env.API_HOST + 'api/dashboard/disk/pools').then((res) => {
                 this.poolMsg = res.data;
-                this.drawpie2();
+                this.drawdiskpie2();
             });
 
             //集群信息状态下获取光盘列表
@@ -144,7 +144,10 @@
                 this.totalPage = Number(res.data.totalPage);
             });
 
-            // this.websocket();
+
+            this.$ajax.get(process.env.API_HOST + 'api/disk/jump').then(res => {
+                this.url = res.data.weburl;
+            });
 
         },
         mounted(){
@@ -166,15 +169,16 @@
             },
 
             //主机情况饼图
-            drawpie1(){
+            drawdiskpie1(){
                 const that = this;
                 this.disk.forEach((item,index) => {
                     this.disk[index].value = 1;
                 });
 
-                let pie1 = this.$echarts.init(document.getElementById('pie1'));
+                let diskpie1 = this.$echarts.init(document.getElementById('diskpie1'));
 
                 let option1 = {
+
                     title: {
                         text: '主机数量\n1',
                         x: 'center',
@@ -184,24 +188,26 @@
                         {
                             type:'pie',
                             radius:['40%','65%'],
-                            color: ['#dd6b66','#759aa0','#e69d87','#8dc1a9','#ea7e53','#eedd78'],
+                            // itemStyle:{
+                            //     color: ['#CD919E','#CD8162','#CD6839','#CD5C5C','#CD2626'],
+                            // },
                             label:{
                                 show:false
                             },
                             data:that.disk
                         }
                     ],
-
+                    color: ['#CD919E','#CD8162','#CD6839','#CD5C5C','#CD2626'],
                     tooltip:{
                         formatter:'主机名:{b}'
                     }
                 };
 
-                pie1.setOption(option1);
+                diskpie1.setOption(option1);
 
                 //点击饼图显示对应主机信息
                 // this.colonyMsg.colony.forEach( item => {
-                //     pie1.on('click', params => {
+                //     diskpie1.on('click', params => {
                 //         if(params.name === item.name ){
                 //             this.show1 = !this.show1;
                 //             if (that.show1 === false){
@@ -215,14 +221,14 @@
             },
 
             //存储池情况饼图
-            drawpie2(){
+            drawdiskpie2(){
                 const that = this;
                 this.poolMsg.poollist.forEach((item,index) => {
                     this.poolMsg.poollist[index].value = 1;
 
                 });
 
-                let pie2 = this.$echarts.init(document.getElementById('pie2'));
+                let diskpie2 = this.$echarts.init(document.getElementById('diskpie2'));
 
                 let option2 = {
                     title: {
@@ -230,11 +236,14 @@
                         x: 'center',
                         y: 'center',
                     },
+
+                    color: ['#CD919E','#CD8162','#CD6839','#CD5C5C','#CD2626'],
+
                     series:[
                         {
                             type:'pie',
                             radius:['40%','65%'],
-                            // color: ['#dd6b66','#759aa0','#e69d87','#8dc1a9','#ea7e53','#eedd78'],
+                            // color: ['#CD919E','#CD8162','#CD6839','#CD5C5C','#CD2626'],
                             label:{
                                 show:false
                             },
@@ -247,11 +256,11 @@
                     }
                 };
 
-                pie2.setOption(option2);
+                diskpie2.setOption(option2);
 
                 //点击饼图获取对应存储池及硬盘信息
                 this.poolMsg.poollist.forEach( item => {
-                    pie2.on('click',  params => {
+                    diskpie2.on('click',  params => {
 
                         if(params.name === item.name ){
 
@@ -286,6 +295,7 @@
                 });
             },
 
+            //条形图
             drawline(){
                 let line = this.$echarts.init(document.getElementById('line'));
                 let time = [new Date()];
@@ -542,19 +552,20 @@
 
             //图表自适应
             resize(){
-                let pie1 = this.$echarts.init(document.getElementById('pie1'));
-                let pie2 = this.$echarts.init(document.getElementById('pie2'));
+                let diskpie1 = this.$echarts.init(document.getElementById('diskpie1'));
+                let diskpie2 = this.$echarts.init(document.getElementById('diskpie2'));
                 let line = this.$echarts.init(document.getElementById('line'));
 
 
                 window.onresize = function(){
-                    pie1.resize();
-                    pie2.resize();
+                    diskpie1.resize();
+                    diskpie2.resize();
                     line.resize();
 
                 }
             },
 
+            //翻页
             currentchange(val){
 
                 if(this.show2 === true){
@@ -630,7 +641,7 @@
     .msg p{
         font-size: 15px;
     }
-    #pie1,#pie2 {
+    #diskpie1,#diskpie2 {
         float: left;
         width: 45%;
         height: 100%;

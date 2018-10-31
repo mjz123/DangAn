@@ -168,7 +168,14 @@
         name: "Dashboard",
         data(){
             return{
-                data:{},
+                data:{
+                    distcapacity:'',
+                    distfree:'',
+                    cdcapacity:'',
+                    cdfree:'',
+                    tapecapacity:'',
+                    tapefree:''
+                },
                 devices:[
                     {
                         "devType": "",  //分布式
@@ -181,7 +188,7 @@
                         ]
                     },
                     {
-                        "devType": "tape",
+                        "devType": "",
                         "capacity": '',
                         "usedCapacity": '',
                     },
@@ -210,16 +217,47 @@
             }
         },
         created(){
-            this.$ajax.get(process.env.API_HOST + 'api/dashboard/capacitystatus').then( res => {
-                this.data = res.data.data[0];
-            })
+            // this.$ajax.get(process.env.API_HOST + 'api/dashboard/capacitystatus').then( res => {
+            //     this.data = res.data.data[0];
+            // });
+            //分布式基本信息
+            this.$ajax.get(process.env.API_HOST + 'api/distribute/capacitystatus').then( res => {
+                this.data.distcapacity = res.data.data.distcapacity;
+                this.data.distfree = res.data.data.distfree;
+            });
+            //光盘库基本信息
+            this.$ajax.get(process.env.API_HOST + 'api/optical/capacitystatus').then( res => {
+                this.data.cdcapacity = res.data.data.cdcapacity;
+                this.data.cdfree = res.data.data.cdfree;
+            });
+            //磁带库基本信息
+            this.$ajax.get(process.env.API_HOST + 'api/tape/capacitystatus').then( res => {
+                this.data.tapecapacity = res.data.data.tapecapacity;
+                this.data.tapefree = res.data.data.tapefree;
+            });
+            // this.$ajax.get(process.env.API_HOST + 'api/distribute/curcapacitystatus').then( res => {
+            //     this.devices[0].data = res.data.device[0]
+            // });
+            // this.$ajax.get(process.env.API_HOST + 'api/optical/curcapacitystatus').then( res => {
+            //     this.devices[2] = res.data.device[0];
+            //     console.log(this.devices[2].capacity);
+            // });
+            // this.$ajax.get(process.env.API_HOST + 'api/tape/curcapacitystatus').then( res => {
+            //     this.devices[1] = res.data.device[0]
+            // });
 
-            this.$ajax.get(process.env.API_HOST + 'api/dashboard/curcapacitystatus').then( res => {
-                this.devices = res.data.device;
-                console.log(this.devices);
-                this.drawpie();
-            })
+            //饼图信息
+            this.$ajax.get(process.env.API_HOST + 'api/dashboard/curcapacitystatus')
+                .then( res => {
+                    this.devices = res.data.device;
+                    console.log(this.devices);
+                    this.drawpie();
+                })
+                .catch(() => {
+                    this.drawpie();
+                });
 
+            //告警信息
             const socket = new SockJS( '/websocket_entry');
             this.stompClient = Stomp.over(socket);
             this.stompClient.connect({}, frame => {

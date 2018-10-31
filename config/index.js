@@ -12,7 +12,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
         '/dev': {
-            target: 'http://192.168.1.29:8090/',  // 通过本地服务器将你的请求转发到这个地址
+            target: 'http://localhost:8090/',  // 通过本地服务器将你的请求转发到这个地址
             changeOrigin: true,  // 设置这个参数可以避免跨域
             ws:true,
             pathRewrite: {
@@ -52,7 +52,7 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/',
+    assetsPublicPath: './',
 
     /**
      * Source Maps

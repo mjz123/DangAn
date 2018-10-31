@@ -17,12 +17,13 @@
                     <div class="widget">
                         <div class="widget-header">
                             <div class="title">
-                                <span v-show="activex">策略设置</span><span v-show="!activex">存储检测</span>
+                                <span v-show="activex">策略设置</span>
+                                <span v-show="!activex">存储检测</span>
                             </div>
                         </div>
                         <div class="widget-body">
-                            <iframe src="http://192.168.1.81:8088/CPCNS_BaoCunGuanLi/SiXingJianCeXml/query.do" frameborder="0" v-if="activex"></iframe>
-                            <iframe src="http://192.168.1.81:8088/CPCNS_BaoCunGuanLi/SiXingJianCeXml/queryCunChu.do" frameborder="0" v-if="!activex"></iframe>
+                            <iframe :src = url.policysetting frameborder="0" v-if="activex" scrolling="auto"></iframe>
+                            <iframe :src = url.storageTest frameborder="0" v-if="!activex" scrolling="auto"></iframe>
                             <!--<div>-->
                                 <!--<a href="http://192.168.1.81:8088/CPCNS_BaoCunGuanLi/SiXingJianCeXml/query.do" target="_blank">-->
                                     <!--<h2>策略设置</h2>-->
@@ -47,8 +48,19 @@
         name: "FourProperties",
         data(){
             return {
-                activex:1
+                activex:1,
+                url:{
+                    policysetting:'',
+                    storageTest:''
+                }
             }
+        },
+        mounted(){
+            //四性检测链接
+            this.$ajax.get(process.env.API_HOST + 'api/fourtest/configure').then(res => {
+                this.url.policysetting = res.data.configure.policysetting;
+                this.url.storageTest = res.data.configure.storageTest;
+            });
         },
         methods:{
             change1(){
