@@ -47,9 +47,7 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
-
                             </div>
                         </div>
                     </div>
@@ -109,7 +107,6 @@
                     })
                 },500);
 
-
                 this.drawpie();
                 this.drawbar();
             });
@@ -122,17 +119,8 @@
             this.resize();
         },
         methods: {
-            test(){
-                let aaa = {
-                    aa:'11'
-                };
-                sessionStorage.setItem('test',JSON.stringify(aaa));
-                const { href } = this.$router.resolve({
-                    name: 'Download'
-                });
-                window.open(href)
-            },
 
+            //文件夹树结构样式
             renderContent(h, { node, data, store }) {
                 return (
                     <span class="custom-tree-node" style="display:flex; align-items:center">
@@ -142,6 +130,7 @@
             );
             },
 
+            //饼图
             drawpie(){
                 const that = this;
                 this.poolMsg.poolName.forEach((item,index) => {
@@ -165,7 +154,6 @@
                         {
                             type:'pie',
                             radius:['15%','35%'],
-                            // color: ['#CD919E','#CD8162','#CD6839','#CD5C5C','#CD2626'],
                             label:{
                                 // formatter:params => {
                                 //     let res = '磁带库名称'+params.name + '\n';
@@ -189,15 +177,10 @@
                 //点击饼图获取展开存储池列表
                 this.poolMsg.poolName.forEach( item => {
                     pie.on('click',  params => {
-
-                        // this.poolid = params.data.id;
                         if(params.name === item.name ){
-
-                            console.log(item.id);
 
                             for (let i=0; i<this.idArray.length; i++){
                                 let a = this.idArray[i];
-                                console.log($("#"+a).attr('id'))
                                 if(item.id == $("#"+a).attr('id')){
                                     $("#"+a).click();
                                 }
@@ -209,6 +192,7 @@
 
             },
 
+            //柱状图
             drawbar(){
                 const that = this;
                 let bar = this.$echarts.init(document.getElementById('bar'));
@@ -219,7 +203,6 @@
                     that.poolMsg.poolName[i]['总容量'] = that.poolMsg.poolName[i].capacity.toFixed(2);
                 }
 
-                console.log(that.poolMsg);
                 let option = {
                     grid:{
                         top:'15%',
@@ -228,7 +211,6 @@
 
                     legend: {
                         top:'5%',
-                        // data:['邮件营销','联盟广告','视频广告']
                     },
                     tooltip: {},
                     dataset: {
@@ -260,7 +242,6 @@
 
                             for (let i=0; i<this.idArray.length; i++){
                                 let a = this.idArray[i];
-                                console.log($("#"+a).attr('id'))
                                 if(item.id == $("#"+a).attr('id')){
                                     $("#"+a).click();
                                 }
@@ -277,36 +258,30 @@
                     return resolve([]);
                 } else if (node.level === 1) {
                     this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/tapelist?path=' + node.data.name).then(res => {
-
                         resolve(res.data.tapes);
                     })
 
                 }  else if(node.level === 2){
                     this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/rootdirs?path=' + node.data.name).then(res => {
-                        console.log(res.data.folder);
                         resolve(res.data.folder);
                     })
                 } else if(node.level === 3){
-                    // if (){
-                        this.show = false;
-                    // }
+                    this.show = false;
 
                     this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/dirs?path='+ node.data.name + '&name=' +  node.data.tapeid).then(res => {
-                        console.log(res.data.folder);
                         this.folder = res.data.folder;
                         resolve(this.folder);
                     });
                 } else {
                     this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/dirs?path='+ node.data.path + '/' + node.data.name + '&name=' +  node.data.tapeid).then(res => {
-                        console.log(res.data.folder);
                         this.folder = res.data.folder;
                         resolve(this.folder);
                     });
                 }
             },
 
+            //点击文件夹列表
             handleNodeClick(data,node,self) {
-                console.log(1);
                 if (node.level === 3 ){
                     this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/dirs?path='+ node.data.name + '&name=' +  node.data.tapeid).then(res => {
                         this.folder = res.data.folder;
@@ -324,6 +299,7 @@
                 }
             },
 
+            //图表自适应
             resize(){
                 let pie = this.$echarts.init(document.getElementById('pie'));
                 let bar = this.$echarts.init(document.getElementById('bar'));
@@ -334,6 +310,7 @@
                 }
             },
 
+            //下载
             download(fileid,name,downpath){
                 sessionStorage.setItem('fileid',fileid);
                 sessionStorage.setItem('filename2',name);
@@ -347,6 +324,7 @@
 
             },
 
+            //预览
             view(fileid,name,downpath){
 
                 sessionStorage.setItem('fileid2',fileid);

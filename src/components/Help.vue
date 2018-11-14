@@ -1,9 +1,5 @@
 <template>
-    <!--<div class="dash">-->
-        <!--<div class="sub-nav">-->
-            <!--<ul></ul>-->
-        <!--</div>-->
-        <div class="wrap-fluid">
+    <div class="wrap-fluid">
             <div class="container-fluid paper-wrap bevel tlbr">
                 <div class="left-sidebar">
                 <div class="row-fluid view">
@@ -37,7 +33,6 @@
             </div>
             </div>
         </div>
-    <!--</div>-->
 </template>
 
 <script>

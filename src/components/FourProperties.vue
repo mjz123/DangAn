@@ -24,15 +24,6 @@
                         <div class="widget-body">
                             <iframe :src = url.policysetting frameborder="0" v-if="activex" scrolling="auto"></iframe>
                             <iframe :src = url.storageTest frameborder="0" v-if="!activex" scrolling="auto"></iframe>
-                            <!--<div>-->
-                                <!--<a href="http://192.168.1.81:8088/CPCNS_BaoCunGuanLi/SiXingJianCeXml/query.do" target="_blank">-->
-                                    <!--<h2>策略设置</h2>-->
-                                <!--</a>-->
-                                    <!--<br><br><br>-->
-                                <!--<a href="http://192.168.1.81:8088/CPCNS_BaoCunGuanLi/SiXingJianCeXml/queryCunChu.do" target="_blank">-->
-                                    <!--<h2>存储检测</h2>-->
-                                <!--</a>-->
-                            <!--</div>-->
                         </div>
                     </div>
                 </div>

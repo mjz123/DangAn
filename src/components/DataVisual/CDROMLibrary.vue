@@ -96,11 +96,13 @@
             };
         },
         created(){
+
             this.$ajax.get(process.env.API_HOST + 'api/dashboard/disk/hosts').then((res) => {
                 this.$set(this.disk,0,res.data.disk[0]);
                 this.drawpie();
             });
 
+            //跳转光盘库链接
             this.$ajax.get(process.env.API_HOST + 'api/disk/jump').then(res => {
                 this.url = res.data.weburl;
             });
@@ -108,6 +110,7 @@
         },
 
         methods: {
+            //文件夹树结构样式
             renderContent(h, { node, data, store }) {
                 return (
                     <span class="custom-tree-node" style="display:flex; align-items:center">
@@ -115,7 +118,6 @@
                     <span>{node.label}</span>
                 </span>
                 );
-
             },
 
             //饼图

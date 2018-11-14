@@ -12,10 +12,7 @@
             let fileid = sessionStorage.getItem('fileid');
             let filename2 = sessionStorage.getItem('filename2');
             let downpath = sessionStorage.getItem('downpath');
-            console.log(downpath);
-            // function f(fileid,) {
-            //
-            // }
+
             //磁带库下载
             this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/downfile?id='+ fileid +'&name=' + filename2).then(res => {
                 if ( res.data.status === '7' ) {

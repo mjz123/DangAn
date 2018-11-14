@@ -704,7 +704,7 @@
     }
     .msg {
         float: left;
-        width: 30%;
+        width: 35%;
         height: 100%;
         box-sizing: border-box;
         position: relative;
