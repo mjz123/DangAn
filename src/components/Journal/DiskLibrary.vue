@@ -61,7 +61,10 @@
         name: "Distributed",
         data(){
             return{
-                journal:[],
+                journal:[{
+                    "time":1542186918000,
+                    "content": '写入数据成功',   //日志信息
+                }],
                 stompClient:''
             }
         },
@@ -73,21 +76,21 @@
             //
             // }
 
-            const socket = new SockJS( '/websocket_entry');
-            this.stompClient = Stomp.over(socket);
-            this.stompClient.connect({}, frame => {
-                console.log('Connected: ' + frame);
-
-                this.stompClient.subscribe('/log/tape_warning_log',res => {
-                    let temp = JSON.parse(res.body);
-                    this.journal = temp.journal;
-                });
-
-            });
-
-            setTimeout(function () {
-                that.stompClient.send("/app/tape_warning_log");
-            },500);
+            // const socket = new SockJS( '/websocket_entry');
+            // this.stompClient = Stomp.over(socket);
+            // this.stompClient.connect({}, frame => {
+            //     console.log('Connected: ' + frame);
+            //
+            //     this.stompClient.subscribe('/log/tape_warning_log',res => {
+            //         let temp = JSON.parse(res.body);
+            //         this.journal = temp.journal;
+            //     });
+            //
+            // });
+            //
+            // setTimeout(function () {
+            //     that.stompClient.send("/app/tape_warning_log");
+            // },500);
 
         },
 

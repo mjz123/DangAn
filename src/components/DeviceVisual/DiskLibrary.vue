@@ -18,10 +18,10 @@
                             <div class="msg">
                                 <div>
                                     <h4>磁带存储</h4>
-                                    <p>主机名称：{{tape[0].name}}</p>
+                                    <p>主机名称：磁带库</p>
                                     <p>CPU信息：{{tape[0].cpuType}}，{{tape[0].cpuCount}}个</p>
                                     <p>内存信息：{{tape[0].memCapacity}}GB</p>
-                                    <p>磁带数量：{{tape[0].hardDiskCount}}盘</p>
+                                    <p>磁带数量：1盘</p>
                                 </div>
                             </div>
                             <div id="tapepie1"></div>
@@ -37,7 +37,7 @@
                             <div class="msg" v-show=show2>
                                 <div>
                                     <h4>磁带组状态</h4>
-                                    <p>磁带组数量：{{poolMsg.poolCount}}</p>
+                                    <p>磁带组数量：1</p>
                                 </div>
                             </div>
                             <div class="msg" v-show=!show2>
@@ -100,7 +100,7 @@
                 show2: true,
                 tape: [
                     {
-                        "name": "",
+                        "name": "磁带库",
                         "cpuType": "",
                         "cpuCount": "",
                         "memCapacity": "",
@@ -108,15 +108,31 @@
                         "status": ""  //1在线 0离线
                     }
                 ],
-                poolMsg:{},
+                poolMsg:{
+                    "poolCount": 1,
+                    "poolName": [{
+                        "name": "磁带组",
+                        "id": 1,
+                        "cpuType": " phytium",
+                        "cpuCount": 2,
+                        "memCapacity": 3.74,
+                        "hardDiskCount": 3,
+                    }]
+                },
                 pool: [{
-                    "name": "",
+                    "name": "xx",
                     "capacity": "",
                     "used": "",
                     "free": "",
                     "status": ""   //1在线 0离线
                 }],
-                disk: [],
+                disk: [{
+                    "id": 1,
+                    "name": "tat",
+                    "used": 0,
+                    "capacity": 100,
+                    "status": 1  //1在线 0离线
+                }],
                 poolid: '',
                 totalPage:1,
                 polling:'',
@@ -124,18 +140,6 @@
             }
         },
         created(){
-            //获取磁带库存储系统集群情况
-            this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/hosts').then((res) => {
-                this.$set(this.tape,0,res.data.tape[0]);
-                this.drawtapepie1();
-            });
-
-            //获取磁带库存储系统磁带匣总体概况
-            this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/pools').then((res) => {
-                this.poolMsg = res.data;
-                this.drawtapepie2();
-            });
-
             //集群信息状态下获取分布式存储系统磁盘列表
             this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/disks?page_num=1&count=5').then((res) => {
                 this.disk = res.data.disk;
@@ -149,6 +153,8 @@
 
         },
         mounted(){
+            this.drawtapepie1();
+            this.drawtapepie2();
             this.drawline();
             this.resize();
         },
@@ -266,107 +272,76 @@
                             if(this.poolid != params.data.id){
                                 this.show2 = false;
                                 this.poolid = params.data.id;
-                                this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/pool?poolid=' + this.poolid) .then( res =>{
-                                    this.$set(this.pool,0,res.data.pool[0]);
-                                });
-                                this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/pool/disks?poolid='+ this.poolid +'&page_num=1&count=5') .then( res =>{
-                                    this.disk = res.data.disk;
-                                });
+                                // this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/pool?poolid=' + this.poolid) .then( res =>{
+                                //     this.$set(this.pool,0,res.data.pool[0]);
+                                // });
+                                // this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/pool/disks?poolid='+ this.poolid +'&page_num=1&count=5') .then( res =>{
+                                //     this.disk = res.data.disk;
+                                // });
                             } else {
 
                                 this.show2 = !this.show2;
-                                if (this.show2 == true) {
-                                    this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/disks?page_num=1&count=5').then((res) => {
-                                        this.disk = res.data.disk;
-                                        this.totalPage = Number(res.data.totalPage);
-                                    });
-                                } else {
-                                    this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/pool/disks?poolid='+ this.poolid +'&page_num=1&count=5') .then( res =>{
-                                        this.disk = res.data.disk;
-                                    });
-                                }
+                                // if (this.show2 == true) {
+                                //     this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/disks?page_num=1&count=5').then((res) => {
+                                //         this.disk = res.data.disk;
+                                //         this.totalPage = Number(res.data.totalPage);
+                                //     });
+                                // } else {
+                                //     this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/pool/disks?poolid='+ this.poolid +'&page_num=1&count=5') .then( res =>{
+                                //         this.disk = res.data.disk;
+                                //     });
+                                // }
                             }
                         }
                     });
                 });
-                // this.poolMsg.poolName.forEach( item => {
-                //     pie2.on('click',  params => {
-                //         this.poolid = params.data.id;
-                //         if(params.name === item.name ){
-                //             this.show2 = !this.show2;
-                //             if (that.show2 === false){
-                //                 this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/pool?poolid=' + this.poolid) .then( res =>{
-                //                     this.$set(this.pool,0,res.data.pool[0]);
-                //                 });
-                //                 this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/pool/disks?poolid='+ this.poolid +'&page_num=1&count=5') .then( res =>{
-                //                     this.disk = res.data.disk;
-                //                 });
-                //             } else {
-                //                 this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/disks?page_num=1&count=5').then((res) => {
-                //                     this.disk = res.data.disk;
-                //                     this.totalPage = Number(res.data.totalPage);
-                //                 });
-                //             }
-                //         }
-                //     });
-                // });
             },
 
             drawline(){
                 let line = this.$echarts.init(document.getElementById('line'));
                 let time = [new Date()];
-                let cpu = [5];
-                let ram = [5];
-                let bw = [5];
+                let cpu = [10];
+                let ram = [10];
+                let bw = [10];
 
                 var that = this;
-                const socket = new SockJS( '/websocket_entry');
-                this.stompClient = Stomp.over(socket);
-                this.stompClient.connect({}, frame => {
-                    console.log('Connected: ' + frame);
-                    this.stompClient.subscribe('/device/tape_sys_info',res => {
-                        let performance = JSON.parse(res.body);
+                function falsedata(){
+                    if(cpu.length < 10 && ram.length){
+                        cpu.push(10);
+                        ram.push(10);
+                        bw.push(10)
+                    } else {
+                        cpu.shift();
+                        ram.shift();
+                        bw.shift();
+                        cpu.push(10);
+                        ram.push(10);
+                        bw.push(10)
+                    }
+                    // console.log(this.CPU)
+                    let date=new Date();
+                    if (time.length < 10) {
+                        time.push(date)
+                    } else {
+                        time.shift();
+                        time.push(date);
+                    }
 
-                        if(cpu.length < 10 && ram.length){
-                            cpu.push(performance.cpu);
-                            ram.push(performance.ram);
-                            bw.push(performance.bw)
-                        } else {
-                            cpu.shift();
-                            ram.shift();
-                            bw.shift();
-                            cpu.push(performance.cpu);
-                            ram.push(performance.ram);
-                            bw.push(performance.bw)
-                        }
-                        // console.log(this.CPU)
-                        let date=new Date();
-                        if (time.length < 10) {
-                            time.push(date)
-                        } else {
-                            time.shift();
-                            time.push(date);
-                        }
-
-                        line.setOption({
-                            xAxis: [
-                                {gridIndex: 0,data: time},
-                                {gridIndex: 1,data: time},
-                                {gridIndex: 2,data: time},
-                            ],
-                            series: [
-                                {gridIndex: 0,data: cpu},
-                                {gridIndex: 0,data: ram},
-                                {gridIndex: 0,data: bw},
-                            ]
-                        });
-
+                    line.setOption({
+                        xAxis: [
+                            {gridIndex: 0,data: time},
+                            {gridIndex: 1,data: time},
+                            {gridIndex: 2,data: time},
+                        ],
+                        series: [
+                            {gridIndex: 0,data: cpu},
+                            {gridIndex: 0,data: ram},
+                            {gridIndex: 0,data: bw},
+                        ]
                     });
-                });
+                }
 
-                this.polling = setInterval(function () {
-                    that.stompClient.send("/app/tape_sys_info");
-                },5000);
+                this.polling = setInterval(falsedata,5000);
 
                 let optionLine = {
                     title:[

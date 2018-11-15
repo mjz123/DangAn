@@ -1,8 +1,5 @@
 <template>
     <div class="wrap-fluid">
-        <!--<div class="sub-nav">-->
-            <!--<ul></ul>-->
-        <!--</div>-->
         <div class="container-fluid paper-wrap bevel tlbr">
             <div class="left-sidebar">
                 <div class="row-fluid view">
@@ -13,7 +10,6 @@
                             </div>
                         </div>
                         <div class="widget-body">
-                            <!--<img src="../assets/img/fuwuqi.gif"/>-->
                             <img class="fuwu" src="../assets/img/jigui3.gif"/>
                         </div>
                     </div>
@@ -34,7 +30,7 @@
                                             <img src="../assets/img/distri.png"/>
                                         </div>
                                         <div class="nav-msg">
-                                            <div><span>{{Math.ceil(data.distcapacity*100)/100}}</span>T</div>
+                                            <div><span>100</span>T</div>
                                             <div>分布式总容量</div>
                                         </div>
                                     </div>
@@ -42,7 +38,7 @@
                                         <div class="nav-img">
                                             <img src="../assets/img/tape2.png"/></div>
                                         <div class="nav-msg">
-                                            <div><span>{{data.tapecapacity}}</span>个</div>
+                                            <div><span>1</span>个</div>
                                             <div>磁带库总磁带数</div>
                                         </div>
                                     </div>
@@ -51,7 +47,7 @@
                                             <img class="disk" src="../assets/img/disk3.png"/>
                                         </div>
                                         <div class="nav-msg">
-                                            <div><span>{{data.cdcapacity}}</span>个</div>
+                                            <div><span>1</span>个</div>
                                             <div>光盘库在线光盘数</div>
                                         </div>
                                     </div>
@@ -59,7 +55,7 @@
                                         <div class="nav-img">
                                             <img src="../assets/img/distri.png"/></div>
                                         <div class="nav-msg">
-                                            <div><span>{{Math.ceil(data.distfree*100)/100}}</span>T</div>
+                                            <div><span>100</span>T</div>
                                             <div>分布式可用容量</div>
                                         </div>
                                     </div>
@@ -68,7 +64,7 @@
 
                                             <img src="../assets/img/tape2.png"/></div>
                                         <div class="nav-msg">
-                                            <div><span>{{data.tapefree}}</span>个</div>
+                                            <div><span>1</span>个</div>
                                             <div>磁带库可用磁带数</div>
                                         </div>
                                     </div>
@@ -77,7 +73,7 @@
                                             <img class="disk" src="../assets/img/disk3.png"/>
                                         </div>
                                         <div class="nav-msg">
-                                            <div><span>{{data.cdfree}}</span>个</div>
+                                            <div><span>1</span>个</div>
                                             <div>光盘库可用空白光盘数</div>
                                         </div>
                                     </div>
@@ -88,22 +84,6 @@
                                     <div id="pie"></div>
                                 </div>
                                 <div class="status-form">
-                                    <!--<el-table-->
-                                        <!--:data="warningMsg"-->
-                                        <!--border-->
-                                        <!--style="width: 100%">-->
-                                        <!--<el-table-column-->
-                                            <!--prop="name"-->
-                                            <!--label="设备名称"-->
-                                            <!--width="180">-->
-                                        <!--</el-table-column>-->
-                                        <!--<el-table-column-->
-                                            <!--prop="status"-->
-                                            <!--label="设备状态"-->
-                                            <!--width="180">-->
-                                        <!--</el-table-column>-->
-
-                                    <!--</el-table>-->
                                     <table class="table table-condensed table-striped table-bordered table-hover">
                                         <thead>
                                             <tr>
@@ -216,68 +196,9 @@
                 ]
             }
         },
-        created(){
-            // this.$ajax.get(process.env.API_HOST + 'api/dashboard/capacitystatus').then( res => {
-            //     this.data = res.data.data[0];
-            // });
-            //分布式基本信息
-            this.$ajax.get(process.env.API_HOST + 'api/distribute/capacitystatus').then( res => {
-                this.data.distcapacity = res.data.data.distcapacity;
-                this.data.distfree = res.data.data.distfree;
-            });
-            //光盘库基本信息
-            this.$ajax.get(process.env.API_HOST + 'api/optical/capacitystatus').then( res => {
-                this.data.cdcapacity = res.data.data.cdcapacity;
-                this.data.cdfree = res.data.data.cdfree;
-            });
-            //磁带库基本信息
-            this.$ajax.get(process.env.API_HOST + 'api/tape/capacitystatus').then( res => {
-                this.data.tapecapacity = res.data.data.tapecapacity;
-                this.data.tapefree = res.data.data.tapefree;
-            });
-            // this.$ajax.get(process.env.API_HOST + 'api/distribute/curcapacitystatus').then( res => {
-            //     this.devices[0].data = res.data.device[0]
-            // });
-            // this.$ajax.get(process.env.API_HOST + 'api/optical/curcapacitystatus').then( res => {
-            //     this.devices[2] = res.data.device[0];
-            //     console.log(this.devices[2].capacity);
-            // });
-            // this.$ajax.get(process.env.API_HOST + 'api/tape/curcapacitystatus').then( res => {
-            //     this.devices[1] = res.data.device[0]
-            // });
+        mounted(){
+            this.drawpie();
 
-            //饼图信息
-            this.$ajax.get(process.env.API_HOST + 'api/dashboard/curcapacitystatus')
-                .then( res => {
-                    this.devices = res.data.device;
-                    console.log(this.devices);
-                    this.drawpie();
-                })
-                .catch(() => {
-                    this.drawpie();
-                });
-
-            //告警信息
-            const socket = new SockJS( '/websocket_entry');
-            this.stompClient = Stomp.over(socket);
-            this.stompClient.connect({}, frame => {
-                console.log('Connected: ' + frame);
-                this.stompClient.subscribe('/log/warning_info',res => {
-                    console.log(JSON.parse(res.body));
-                    let temp = JSON.parse(res.body);
-                    this.warningMsg = temp.status;
-                    console.log(this.warningMsg);
-                });
-            });
-
-            this.polling = setInterval(() => {
-                this.stompClient.send("/app/warning_info");
-            },5000);
-
-        },
-
-        beforeDestroy(){
-            clearInterval(this.polling);
         },
 
         methods:{
@@ -304,7 +225,7 @@
                                         formatter:function (params) {
                                             let res = params.name + '<br/>';
                                             for (let i=0; i<that.devices[0].data.length; i++){
-                                                res += '总容量'+ Math.ceil(that.devices[0].data[i].capacity*100)/100 + 'T 可用容量' + Math.ceil(that.devices[0].data[i].usedCapacity*100)/100 + 'T<br/>';
+                                                res += '总容量100T 可用容量100T<br/>';
                                             }
                                             return res;
                                         }
@@ -314,14 +235,14 @@
                                     name:'光盘库存储',
                                     value:1,
                                     tooltip:{
-                                        formatter:'{b}</br> 总容量' + Math.ceil(that.devices[2].capacity*100)/100 +'T 可用容量' + Math.ceil(that.devices[2].usedCapacity*100)/100 +'T'
+                                        formatter:'{b}</br> 总容量100T 可用容量100T'
                                     }
                                 },
                                 {
                                     name:'磁带库存储',
                                     value:1,
                                     tooltip:{
-                                        formatter:'{b}</br> 总容量' + Math.ceil(that.devices[1].capacity*100)/100 +'T 可用容量' + Math.ceil(that.devices[1].usedCapacity*100)/100+'T'
+                                        formatter:'{b}</br> 总容量100T 可用容量100T'
                                     }
                                 },
                             ],

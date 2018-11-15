@@ -18,17 +18,17 @@
                             <div class="msg" v-show=show1>
                                 <div>
                                     <h4>分布式集群</h4>
-                                    <p>主机数量：{{colonyMsg.colonyCount}}</p>
+                                    <p>主机数量：1</p>
                                 </div>
                             </div>
                             <div class="msg" v-show=!show1>
                                 <div>
                                     <h4>分布式集群</h4>
-                                    <p>主机名称：{{host[0].name}}</p>
+                                    <p>主机名称：分布式</p>
                                     <p>CPU信息：{{host[0].cpu_type}}，{{host[0].cpucount}}个</p>
                                     <p>内存信息：{{Math.ceil(host[0].mem_capacity/1024/1024/1024*100)/100}}GB</p>
-                                    <p>硬盘数量：{{host[0].disk_count-1}}盘</p>
-                                    <p>在线状态：{{host[0].status | status}}</p>
+                                    <p>硬盘数量：1盘</p>
+                                    <p>在线状态：在线</p>
                                 </div>
                             </div>
                             <div id="pie1"></div>
@@ -44,17 +44,17 @@
                             <div class="msg" v-show=show2>
                                 <div>
                                     <h4>存储池状态</h4>
-                                    <p>存储池数量：{{poolMsg.poolCount}}</p>
+                                    <p>存储池数量：1</p>
                                 </div>
                             </div>
                             <div class="msg" v-show=!show2>
                                 <div>
                                     <h4>存储池状态</h4>
-                                    <p>存储池名称：{{pool[0].name}}</p>
-                                    <p>存储池总容量：{{Math.ceil(pool[0].capacity*100)/100}}T</p>
-                                    <p>已用容量：{{Math.ceil(pool[0].used*100)/100}}T</p>
-                                    <p>未用容量：{{Math.ceil(pool[0].free*100)/100}}T</p>
-                                    <p>在线状态：{{pool[0].status | status}}</p>
+                                    <p>存储池名称：分布式存储池</p>
+                                    <p>存储池总容量：100T</p>
+                                    <p>已用容量：0T</p>
+                                    <p>未用容量：100T</p>
+                                    <p>在线状态：在线</p>
                                 </div>
                             </div>
                             <div id="pie2"></div>
@@ -78,8 +78,8 @@
                                         <td>{{index+1}}</td>
                                         <td>{{item.name}}</td>
                                         <td>{{item.hostname}}</td>
-                                        <td>{{Math.ceil(item.used*100)/100}}GB</td>
-                                        <td>{{Math.ceil(item.capacity*100)/100}}GB</td>
+                                        <td>{{Math.ceil(item.used*100)/100}}T</td>
+                                        <td>{{Math.ceil(item.capacity*100)/100}}T</td>
                                         <td>{{item.status | status}}</td>
                                     </tr>
                                 </tbody>
@@ -105,11 +105,18 @@
     export default {
         name: "Distributed",
         data(){
-            return{
+            return {
                 show1: true,
                 show2: true,
                 show3:true,
-                colonyMsg:{},
+                colonyMsg:{
+                    "colonyCount": 1,
+                    "colony": [{
+                        "id": 1,
+                        "name": "分布式",
+                        "status": 1 //1在线 0离线
+                    }]
+                },
                 host: [
                     {
                         "name": "",
@@ -120,7 +127,17 @@
                         "status": ""  //1在线 0离线
                      }
                  ],
-                poolMsg:{},
+                poolMsg:{
+                    "poolCount": 1,
+                    "poolName": [{
+                        "name": "分布式存储池",
+                        "id": 1,
+                        "cpuType": " phytium",
+                        "cpuCount": 2,
+                        "memCapacity": 3.74,
+                        "hardDiskCount": 3,
+                    }]
+                },
                 pool: [{
                     "name": "",
                     "capacity": "",
@@ -128,7 +145,14 @@
                     "free": "",
                     "status": ""   //1在线 0离线
                 }],
-                disk: [],
+                disk: [{
+                    "id": 1,
+                    "name": "qaq",
+                    "hostname": "分布式", //所属主机名
+                    "used": 0,
+                    "capacity": 100,
+                    "status": 1  //1在线 0离线
+                }],
                 poolid: '',
                 totalPage:1,
                 stompClient:'',
@@ -137,31 +161,9 @@
                 url:''
             }
         },
-        created(){
-            //获取分布式存储系统集群情况
-            this.$ajax.get(process.env.API_HOST + 'api/device/distribute/hosts').then((res) => {
-                this.colonyMsg = res.data;
-                this.drawpie1();
-            });
-
-            //获取分布式存储系统存储池总体概况
-            this.$ajax.get(process.env.API_HOST + 'api/dashboard/distribute/pools').then((res) => {
-                this.poolMsg = res.data;
-                this.drawpie2();
-            });
-
-            //集群信息状态下获取分布式存储系统磁盘列表
-            this.$ajax.get(process.env.API_HOST + 'api/dashboard/distribute/disks?page_num=1&count=5').then((res) => {
-                this.disk = res.data.disk;
-                this.totalPage = Number(res.data.totalPage);
-            });
-
-            this.$ajax.get(process.env.API_HOST + 'api/distribute/jump').then(res => {
-                this.url = res.data.weburl;
-            });
-
-        },
         mounted(){
+            this.drawpie1();
+            this.drawpie2();
             this.drawline(1);
 
             this.resize();
@@ -223,9 +225,9 @@
                         if(params.name === item.name ){
                             this.show1 = !this.show1;
                             if (that.show1 === false){
-                                this.$ajax.get(process.env.API_HOST + 'api/device/distribute/host?deviceId=' + params.data.host_id) .then( res =>{
-                                    this.$set(this.host,0,res.data.host[0]);
-                                });
+                                // this.$ajax.get(process.env.API_HOST + 'api/device/distribute/host?deviceId=' + params.data.host_id) .then( res =>{
+                                //     this.$set(this.host,0,res.data.host[0]);
+                                // });
                                 // this.drawline2(params.data.host_id);
                                 this.drawline(2,params.data.host_id);
                                 this.disconnect();
@@ -282,111 +284,81 @@
                             if(this.poolid != params.data.id){
                                 this.show2 = false;
                                 this.poolid = params.data.id;
-                                this.$ajax.get(process.env.API_HOST + 'api/dashboard/distribute/pool?poolid=' + this.poolid) .then( res =>{
-                                    this.$set(this.pool,0,res.data.pool[0]);
-                                });
-                                this.$ajax.get(process.env.API_HOST + 'api/dashboard/distribute/pool/disks?poolid='+ this.poolid +'&page_num=1&count=5') .then( res =>{
-                                    this.disk = res.data.disk;
-                                    this.totalPage = Number(res.data.totalPage);
-                                });
+                                // this.$ajax.get(process.env.API_HOST + 'api/dashboard/distribute/pool?poolid=' + this.poolid) .then( res =>{
+                                //     this.$set(this.pool,0,res.data.pool[0]);
+                                // });
+                                // this.$ajax.get(process.env.API_HOST + 'api/dashboard/distribute/pool/disks?poolid='+ this.poolid +'&page_num=1&count=5') .then( res =>{
+                                //     this.disk = res.data.disk;
+                                //     this.totalPage = Number(res.data.totalPage);
+                                // });
                             } else {
                                 this.show2 = !this.show2;
-                                if (this.show2 == true) {
-                                    this.$ajax.get(process.env.API_HOST + 'api/dashboard/distribute/disks?page_num=1&count=5').then((res) => {
-                                        this.disk = res.data.disk;
-                                        this.totalPage = Number(res.data.totalPage);
-                                    });
-                                } else {
-                                    this.$ajax.get(process.env.API_HOST + 'api/dashboard/distribute/pool/disks?poolid='+ this.poolid +'&page_num=1&count=5') .then( res =>{
-                                        this.disk = res.data.disk;
-                                        this.totalPage = Number(res.data.totalPage);
-                                    });
-                                }
+                                // if (this.show2 == true) {
+                                //     this.$ajax.get(process.env.API_HOST + 'api/dashboard/distribute/disks?page_num=1&count=5').then((res) => {
+                                //         this.disk = res.data.disk;
+                                //         this.totalPage = Number(res.data.totalPage);
+                                //     });
+                                // } else {
+                                //     this.$ajax.get(process.env.API_HOST + 'api/dashboard/distribute/pool/disks?poolid='+ this.poolid +'&page_num=1&count=5') .then( res =>{
+                                //         this.disk = res.data.disk;
+                                //         this.totalPage = Number(res.data.totalPage);
+                                //     });
+                                // }
                             }
                         }
                     });
                 });
-                // this.poolMsg.poolName.forEach( item => {
-                //     pie2.on('click',  params => {
-                //         this.poolid = params.data.id;
-                //         if(params.name === item.name ){
-                //             this.show2 = !this.show2;
-                //             if (that.show2 === false){
-                //                 this.$ajax.get(process.env.API_HOST + 'api/dashboard/distribute/pool?poolid=' + this.poolid) .then( res =>{
-                //                     this.$set(this.pool,0,res.data.pool[0]);
-                //                 });
-                //                 this.$ajax.get(process.env.API_HOST + 'api/dashboard/distribute/pool/disks?poolid='+ this.poolid +'&page_num=1&count=5') .then( res =>{
-                //                     this.disk = res.data.disk;
-                //                     this.totalPage = Number(res.data.totalPage);
-                //                 });
-                //             } else {
-                //                 this.$ajax.get(process.env.API_HOST + 'api/dashboard/distribute/disks?page_num=1&count=5').then((res) => {
-                //                     this.disk = res.data.disk;
-                //                     this.totalPage = Number(res.data.totalPage);
-                //                 });
-                //             }
-                //         }
-                //     });
-                // });
+
             },
 
             //条形图
             drawline(status,id){
                 let line = this.$echarts.init(document.getElementById('line'));
                 let time = [new Date()];
-                let cpu = [5];
-                let ram = [5];
-                let bw = [5];
+                let cpu = [10];
+                let ram = [10];
+                let bw = [10];
 
                 var that = this;
                 if (status === 1){
-                    const socket = new SockJS( '/websocket_entry');
-                    this.stompClient = Stomp.over(socket);
-                    this.stompClient.connect({}, frame => {
-                        console.log('Connected: ' + frame);
-                        this.stompClient.subscribe('/device/dist_colony_sys_info',res => {
-                            let performance = JSON.parse(res.body);
 
-                            if(cpu.length < 10 && ram.length){
-                                cpu.push(performance.cpu);
-                                ram.push(performance.ram);
-                                bw.push(performance.bw)
-                            } else {
-                                cpu.shift();
-                                ram.shift();
-                                bw.shift();
-                                cpu.push(performance.cpu);
-                                ram.push(performance.ram);
-                                bw.push(performance.bw)
-                            }
-                            // console.log(this.CPU)
-                            let date=new Date();
-                            if (time.length < 10) {
-                                time.push(date)
-                            } else {
-                                time.shift();
-                                time.push(date);
-                            }
+                    function falsedata(){
+                        if(cpu.length < 10 && ram.length){
+                            cpu.push(10);
+                            ram.push(10);
+                            bw.push(10)
+                        } else {
+                            cpu.shift();
+                            ram.shift();
+                            bw.shift();
+                            cpu.push(10);
+                            ram.push(10);
+                            bw.push(10)
+                        }
+                        // console.log(this.CPU)
+                        let date=new Date();
+                        if (time.length < 10) {
+                            time.push(date)
+                        } else {
+                            time.shift();
+                            time.push(date);
+                        }
 
-                            line.setOption({
-                                xAxis: [
-                                    {gridIndex: 0,data: time},
-                                    {gridIndex: 1,data: time},
-                                    {gridIndex: 2,data: time},
-                                ],
-                                series: [
-                                    {gridIndex: 0,data: cpu},
-                                    {gridIndex: 0,data: ram},
-                                    {gridIndex: 0,data: bw},
-                                ]
-                            });
-
+                        line.setOption({
+                            xAxis: [
+                                {gridIndex: 0,data: time},
+                                {gridIndex: 1,data: time},
+                                {gridIndex: 2,data: time},
+                            ],
+                            series: [
+                                {gridIndex: 0,data: cpu},
+                                {gridIndex: 0,data: ram},
+                                {gridIndex: 0,data: bw},
+                            ]
                         });
-                    });
+                    }
 
-                    this.polling = setInterval(function () {
-                        that.stompClient.send("/app/dist_colony_sys_info");
-                    },5000);
+                    this.polling = setInterval(falsedata,5000);
 
                 } else {
 
@@ -394,16 +366,16 @@
                         that.$ajax.post(process.env.API_HOST + 'device/dist_sys_data/'+id).then(res=>{
                             let performance =res.data.data;
                             if(cpu.length < 10 && ram.length){
-                                cpu.push(performance.cpu);
-                                ram.push(performance.ram);
-                                bw.push(performance.bw)
+                                cpu.push(10);
+                                ram.push(10);
+                                bw.push(10)
                             } else {
                                 cpu.shift();
                                 ram.shift();
                                 bw.shift();
-                                cpu.push(performance.cpu);
-                                ram.push(performance.ram);
-                                bw.push(performance.bw)
+                                cpu.push(10);
+                                ram.push(10);
+                                bw.push(10)
                             }
                             // console.log(this.CPU)
                             let date=new Date();

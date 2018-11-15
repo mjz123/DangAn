@@ -102,23 +102,40 @@
                 show2: true,
                 disk: [
                     {
-                        "name": "",
+                        "name": "光盘库",
                         "cpuType": "",
                         "cpuCount": "",
                         "memCapacity": "",
-                        "hardDiskCount": "",
+                        "hardDiskCount": 1,
                         "status": ""  //1在线 0离线
                     }
                 ],
-                poolMsg:{},
+                poolMsg:{
+                    "poolCount": 1,
+                    "poollist": [{
+                        "name": "光盘匣",
+                        "id": 1,
+                        "cpuType": " phytium",
+                        "cpuCount": 2,
+                        "memCapacity": 3.74,
+                        "hardDiskCount": 3,
+                    }]
+                },
                 pool: [{
-                    "name": "",
-                    "capacity": "",
-                    "used": "",
-                    "free": "",
-                    "status": ""   //1在线 0离线
+                    "name": "xx",
+                    "capacity": "100",
+                    "used": "0",
+                    "free": "100",
+                    "status": 1,   //1在线 0离线
+                    cardnum:1
                 }],
-                diskPage: [],
+                diskPage: [{
+                    "id": 1,
+                    "name": "cac",
+                    "used": 0,
+                    "capacity": 100,
+                    "status": 1  //1在线 0离线
+                }],
                 poolid: 0,
                 totalPage:1,
                 polling:'',
@@ -126,18 +143,6 @@
             }
         },
         created(){
-            //获取光盘库存储系统集群情况
-            this.$ajax.get(process.env.API_HOST + 'api/dashboard/disk/hosts').then((res) => {
-                this.$set(this.disk,0,res.data.disk[0]);
-                this.drawdiskpie1();
-            });
-
-            //获取光盘库存储系统磁带匣总体概况
-            this.$ajax.get(process.env.API_HOST + 'api/dashboard/disk/pools').then((res) => {
-                this.poolMsg = res.data;
-                this.drawdiskpie2();
-            });
-
             //集群信息状态下获取光盘列表
             this.$ajax.get(process.env.API_HOST + 'api/dashboard/disk/disks?page_num=1&count=5').then((res) => {
                 this.diskPage = res.data.disk;
@@ -151,6 +156,8 @@
 
         },
         mounted(){
+            this.drawdiskpie1();
+            this.drawdiskpie2();
             this.drawline();
             this.resize();
         },
@@ -159,7 +166,6 @@
             clearInterval(this.polling);
         },
         methods:{
-
             disconnect(){
                 if (this.stompClient !== null) {
                     this.stompClient.disconnect();
@@ -205,19 +211,6 @@
 
                 diskpie1.setOption(option1);
 
-                //点击饼图显示对应主机信息
-                // this.colonyMsg.colony.forEach( item => {
-                //     diskpie1.on('click', params => {
-                //         if(params.name === item.name ){
-                //             this.show1 = !this.show1;
-                //             if (that.show1 === false){
-                //                 this.$ajax.get(process.env.API_HOST + 'api/device/distribute/host?deviceId=' + params.data.id) .then( res =>{
-                //                     this.$set(this.host,0,res.data.host[0]);
-                //                 });
-                //             }
-                //         }
-                //     });
-                // });
             },
 
             //存储池情况饼图
@@ -299,59 +292,48 @@
             drawline(){
                 let line = this.$echarts.init(document.getElementById('line'));
                 let time = [new Date()];
-                let cpu = [5];
-                let ram = [5];
-                let bw = [5];
+                let cpu = [10];
+                let ram = [10];
+                let bw = [10];
                 var that = this;
 
-                const socket = new SockJS( '/websocket_entry');
-                this.stompClient = Stomp.over(socket);
-                this.stompClient.connect({}, frame => {
-                    console.log('Connected: ' + frame);
-                    this.stompClient.subscribe('/device/cddisk_sys_info',res => {
-                        let performance = JSON.parse(res.body);
+                function falsedata(){
+                    if(cpu.length < 10 && ram.length){
+                        cpu.push(10);
+                        ram.push(10);
+                        bw.push(10)
+                    } else {
+                        cpu.shift();
+                        ram.shift();
+                        bw.shift();
+                        cpu.push(10);
+                        ram.push(10);
+                        bw.push(10)
+                    }
+                    // console.log(this.CPU)
+                    let date=new Date();
+                    if (time.length < 10) {
+                        time.push(date)
+                    } else {
+                        time.shift();
+                        time.push(date);
+                    }
 
-                        if(cpu.length < 10 && ram.length){
-                            cpu.push(performance.cpu);
-                            ram.push(performance.ram);
-                            bw.push(performance.bw)
-                        } else {
-                            cpu.shift();
-                            ram.shift();
-                            bw.shift();
-                            cpu.push(performance.cpu);
-                            ram.push(performance.ram);
-                            bw.push(performance.bw)
-                        }
-                        // console.log(this.CPU)
-                        let date=new Date();
-                        if (time.length < 10) {
-                            time.push(date)
-                        } else {
-                            time.shift();
-                            time.push(date);
-                        }
-
-                        line.setOption({
-                            xAxis: [
-                                {gridIndex: 0,data: time},
-                                {gridIndex: 1,data: time},
-                                {gridIndex: 2,data: time},
-                            ],
-                            series: [
-                                {gridIndex: 0,data: cpu},
-                                {gridIndex: 0,data: ram},
-                                {gridIndex: 0,data: bw},
-                            ]
-                        });
-
+                    line.setOption({
+                        xAxis: [
+                            {gridIndex: 0,data: time},
+                            {gridIndex: 1,data: time},
+                            {gridIndex: 2,data: time},
+                        ],
+                        series: [
+                            {gridIndex: 0,data: cpu},
+                            {gridIndex: 0,data: ram},
+                            {gridIndex: 0,data: bw},
+                        ]
                     });
-                });
+                }
 
-                this.polling = setInterval(function () {
-                    that.stompClient.send("/app/cddisk_sys_info");
-                },5000);
-
+                this.polling = setInterval(falsedata,5000);
                 let optionLine = {
                     title:[
                         {
