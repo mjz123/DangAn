@@ -28,8 +28,8 @@ Vue.use(Router)
 
 export default new Router({
   routes: [
-    {path:'/',redirect:'Dashboard'},
-    {path: '/DeviceVisual', redirect: '/DeviceVisual/Distributed'},
+      {path:'/',redirect:'Dashboard'},
+      {path: '/DeviceVisual', redirect: '/DeviceVisual/Distributed'},
       {path: '/DataVisual', redirect: '/DataVisual/Distributed'},
       {path: '/Journal', redirect: '/Journal/Distributed'},
       {

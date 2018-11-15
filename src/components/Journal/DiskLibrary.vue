@@ -144,9 +144,9 @@
         left: 50%;
         transform: translate(-50%,-50%);
     }
-    .msg p{
-        font-size: 15px;
-    }
+    /*.msg p{*/
+        /*font-size: 15px;*/
+    /*}*/
 
     th,td{
         text-align: center;

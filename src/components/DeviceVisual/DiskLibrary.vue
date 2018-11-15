@@ -196,7 +196,10 @@
                     ],
                     color: ['#CD919E','#CD8162','#CD6839','#CD5C5C','#CD2626'],
                     tooltip:{
-                        formatter:'主机名:{b}'
+                        formatter:'主机名:{b}',
+                        textStyle:{
+                            fontSize:16
+                        }
                     }
                 };
 
@@ -251,7 +254,10 @@
                     ],
                     color: ['#CD919E','#CD8162','#CD6839','#CD5C5C','#CD2626'],
                     tooltip:{
-                        formatter:'存储池名称:{b}'
+                        formatter:'存储池名称:{b}',
+                        textStyle:{
+                            fontSize:16
+                        }
                     }
                 };
 
@@ -653,9 +659,9 @@
         /*left: 50%;*/
         transform: translateY(-50%);
     }
-    .msg p{
-        font-size: 15px;
-    }
+    /*.msg p{*/
+        /*font-size: 15px;*/
+    /*}*/
     #tapepie1,#tapepie2 {
         float: left;
         width: 45%;
@@ -670,7 +676,6 @@
     }
     th,td{
         text-align: center;
-        font-size: 14px;
     }
     .el-pagination {
         position: absolute;

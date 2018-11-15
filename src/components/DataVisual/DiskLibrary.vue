@@ -168,7 +168,15 @@
                     ],
                     color: ['#CD919E','#CD8162','#CD6839','#CD5C5C','#CD2626'],
                     tooltip:{
-                        formatter:'磁带库名称:{b}'
+                        formatter:'磁带库名称:{b}',
+                        textStyle:{
+                            fontSize:16
+                        }
+                    },
+                    legend:{
+                        textStyle:{
+                            fontSize:16
+                        }
                     }
                 };
 
@@ -355,7 +363,7 @@
         overflow-y: auto;
     }
     .el-tree {
-        font-size: 15px;
+        /*font-size: 15px;*/
     }
     /*.file {*/
         /*display: flex;*/
@@ -374,7 +382,7 @@
         height:100px;
     }
     .file-content p {
-        font-size: 15px;
+        /*font-size: 15px;*/
         text-align: center;
         width: 90px;
         word-wrap: break-word;

@@ -88,22 +88,6 @@
                                     <div id="pie"></div>
                                 </div>
                                 <div class="status-form">
-                                    <!--<el-table-->
-                                        <!--:data="warningMsg"-->
-                                        <!--border-->
-                                        <!--style="width: 100%">-->
-                                        <!--<el-table-column-->
-                                            <!--prop="name"-->
-                                            <!--label="设备名称"-->
-                                            <!--width="180">-->
-                                        <!--</el-table-column>-->
-                                        <!--<el-table-column-->
-                                            <!--prop="status"-->
-                                            <!--label="设备状态"-->
-                                            <!--width="180">-->
-                                        <!--</el-table-column>-->
-
-                                    <!--</el-table>-->
                                     <table class="table table-condensed table-striped table-bordered table-hover">
                                         <thead>
                                             <tr>
@@ -330,9 +314,15 @@
                     ],
                     legend:{
                         orient:'vertical',
-                        left:0
+                        left:0,
+                        textStyle:{
+                            fontSize:16
+                        }
                     },
                     tooltip:{
+                        textStyle:{
+                            fontSize:16
+                        }
                         // formatter:'{b}</br> 总容量' + that.devices[0].data[0].capacity +'可用容量3T'
                     }
 
@@ -370,7 +360,6 @@
     }
 
     .fuwu {
-
         max-height: 90%;
         position: absolute;
         top: 50%;
