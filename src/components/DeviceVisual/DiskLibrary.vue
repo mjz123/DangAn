@@ -19,8 +19,8 @@
                                 <div>
                                     <h4>磁带存储</h4>
                                     <p>主机名称：磁带库</p>
-                                    <p>CPU信息：{{tape[0].cpuType}}，{{tape[0].cpuCount}}个</p>
-                                    <p>内存信息：{{tape[0].memCapacity}}GB</p>
+                                    <p>CPU信息：phytium，8个</p>
+                                    <p>内存信息：16GB</p>
                                     <p>磁带数量：1盘</p>
                                 </div>
                             </div>
@@ -37,7 +37,7 @@
                             <div class="msg" v-show=show2>
                                 <div>
                                     <h4>磁带组状态</h4>
-                                    <p>磁带组数量：1</p>
+                                    <p>磁带组数量：3</p>
                                 </div>
                             </div>
                             <div class="msg" v-show=!show2>
@@ -109,15 +109,31 @@
                     }
                 ],
                 poolMsg:{
-                    "poolCount": 1,
+                    "poolCount": 3,
                     "poolName": [{
-                        "name": "磁带组",
+                        "name": "磁带组1",
                         "id": 1,
                         "cpuType": " phytium",
                         "cpuCount": 2,
                         "memCapacity": 3.74,
                         "hardDiskCount": 3,
-                    }]
+                    },
+                        {
+                            "name": "磁带组2",
+                            "id": 1,
+                            "cpuType": " phytium",
+                            "cpuCount": 2,
+                            "memCapacity": 3.74,
+                            "hardDiskCount": 3,
+                        },
+                        {
+                            "name": "磁带组3",
+                            "id": 1,
+                            "cpuType": " phytium",
+                            "cpuCount": 2,
+                            "memCapacity": 3.74,
+                            "hardDiskCount": 3,
+                        }]
                 },
                 pool: [{
                     "name": "xx",
@@ -132,7 +148,28 @@
                     "used": 0,
                     "capacity": 100,
                     "status": 1  //1在线 0离线
-                }],
+                },
+                    {
+                        "id": 1,
+                        "name": "tat2",
+                        "used": 0,
+                        "capacity": 100,
+                        "status": 1  //1在线 0离线
+                    },
+                    {
+                        "id": 1,
+                        "name": "tat3",
+                        "used": 0,
+                        "capacity": 100,
+                        "status": 1  //1在线 0离线
+                    },
+                    {
+                        "id": 1,
+                        "name": "tat4",
+                        "used": 0,
+                        "capacity": 100,
+                        "status": 1  //1在线 0离线
+                    }],
                 poolid: '',
                 totalPage:1,
                 polling:'',

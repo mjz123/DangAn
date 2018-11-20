@@ -12,7 +12,7 @@ html, body {
   background-color:rgba(255, 255, 255, 0);
   color:#555;
   font-family: Microsoft YaHei;
-  font-size:14px;
+  font-size:16px;
 }
 #site-landing {
   position:relative;
@@ -330,7 +330,7 @@ img {
 	  display: block;
 	  padding: 16px 0px;
 	  text-transform: uppercase;
-	  font-size: 16px;
+	  font-size: 18px;
 	  font-family: Microsoft YaHei;
 	  -webkit-border-radius: 4px 4px 0 0;
 	  -moz-border-radius: 4px 4px 0 0;
@@ -552,7 +552,7 @@ footer {
   color: #333333;
   float: left;
   font-weight: bold;
-  font-size: 16px;
+  font-size: 18px;
     padding-left: 35px;
 }
 .widget .widget-header span.tools {
@@ -637,7 +637,7 @@ footer {
 
 .table-bordered > thead > tr > th{
 	color: rgba(0, 0, 0, 0.7) !important;
-	font-size: 15px;
+	font-size: 16px;
 	/* border:0.5px solid #D8D3D3; */
 }
 table.dataTable thead th, table.dataTable thead td {
@@ -1097,4 +1097,7 @@ a {
 }
 a :hover{
     text-decoration: none!important;
+}
+h4,h5 {
+    font-size: 18px!important;
 }

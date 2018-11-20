@@ -153,7 +153,6 @@
 
     th,td{
         text-align: center;
-        font-size: 14px;
     }
     .table {
         width: 95%;

@@ -38,7 +38,7 @@
                                         <div class="nav-img">
                                             <img src="../assets/img/tape2.png"/></div>
                                         <div class="nav-msg">
-                                            <div><span>1</span>个</div>
+                                            <div><span>10</span>个</div>
                                             <div>磁带库总磁带数</div>
                                         </div>
                                     </div>
@@ -47,7 +47,7 @@
                                             <img class="disk" src="../assets/img/disk3.png"/>
                                         </div>
                                         <div class="nav-msg">
-                                            <div><span>1</span>个</div>
+                                            <div><span>10</span>个</div>
                                             <div>光盘库在线光盘数</div>
                                         </div>
                                     </div>
@@ -61,10 +61,9 @@
                                     </div>
                                     <div class="metro-nav-block" style="background: #FFD300">
                                         <div class="nav-img">
-
                                             <img src="../assets/img/tape2.png"/></div>
                                         <div class="nav-msg">
-                                            <div><span>1</span>个</div>
+                                            <div><span>10</span>个</div>
                                             <div>磁带库可用磁带数</div>
                                         </div>
                                     </div>
@@ -73,7 +72,7 @@
                                             <img class="disk" src="../assets/img/disk3.png"/>
                                         </div>
                                         <div class="nav-msg">
-                                            <div><span>1</span>个</div>
+                                            <div><span>10</span>个</div>
                                             <div>光盘库可用空白光盘数</div>
                                         </div>
                                     </div>
@@ -246,12 +245,14 @@
                                     }
                                 },
                             ],
-
                         }
                     ],
                     legend:{
                         orient:'vertical',
-                        left:0
+                        left:0,
+                        textStyle:{
+                            fontSize:16
+                        }
                     },
                     tooltip:{
                         // formatter:'{b}</br> 总容量' + that.devices[0].data[0].capacity +'可用容量3T'

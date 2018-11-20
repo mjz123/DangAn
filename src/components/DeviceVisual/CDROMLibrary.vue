@@ -103,15 +103,15 @@
                 disk: [
                     {
                         "name": "光盘库",
-                        "cpuType": "",
-                        "cpuCount": "",
-                        "memCapacity": "",
+                        "cpuType": "phytium",
+                        "cpuCount": "8",
+                        "memCapacity": "16",
                         "hardDiskCount": 1,
                         "status": ""  //1在线 0离线
                     }
                 ],
                 poolMsg:{
-                    "poolCount": 1,
+                    "poolCount": 10,
                     "poollist": [{
                         "name": "光盘匣",
                         "id": 1,
@@ -119,7 +119,79 @@
                         "cpuCount": 2,
                         "memCapacity": 3.74,
                         "hardDiskCount": 3,
-                    }]
+                    },
+                        {
+                            "name": "光盘匣2",
+                            "id": 1,
+                            "cpuType": " phytium",
+                            "cpuCount": 2,
+                            "memCapacity": 3.74,
+                            "hardDiskCount": 3,
+                        },
+                        {
+                            "name": "光盘匣3",
+                            "id": 1,
+                            "cpuType": " phytium",
+                            "cpuCount": 2,
+                            "memCapacity": 3.74,
+                            "hardDiskCount": 3,
+                        },
+                        {
+                            "name": "光盘匣4",
+                            "id": 1,
+                            "cpuType": " phytium",
+                            "cpuCount": 2,
+                            "memCapacity": 3.74,
+                            "hardDiskCount": 3,
+                        },
+                        {
+                            "name": "光盘匣5",
+                            "id": 1,
+                            "cpuType": " phytium",
+                            "cpuCount": 2,
+                            "memCapacity": 3.74,
+                            "hardDiskCount": 3,
+                        },
+                        {
+                            "name": "光盘匣6",
+                            "id": 1,
+                            "cpuType": " phytium",
+                            "cpuCount": 2,
+                            "memCapacity": 3.74,
+                            "hardDiskCount": 3,
+                        },
+                        {
+                            "name": "光盘匣7",
+                            "id": 1,
+                            "cpuType": " phytium",
+                            "cpuCount": 2,
+                            "memCapacity": 3.74,
+                            "hardDiskCount": 3,
+                        },
+                        {
+                            "name": "光盘匣8",
+                            "id": 1,
+                            "cpuType": " phytium",
+                            "cpuCount": 2,
+                            "memCapacity": 3.74,
+                            "hardDiskCount": 3,
+                        },
+                        {
+                            "name": "光盘匣9",
+                            "id": 1,
+                            "cpuType": " phytium",
+                            "cpuCount": 2,
+                            "memCapacity": 3.74,
+                            "hardDiskCount": 3,
+                        },
+                        {
+                            "name": "光盘匣10",
+                            "id": 1,
+                            "cpuType": " phytium",
+                            "cpuCount": 2,
+                            "memCapacity": 3.74,
+                            "hardDiskCount": 3,
+                        }]
                 },
                 pool: [{
                     "name": "xx",
@@ -135,7 +207,27 @@
                     "used": 0,
                     "capacity": 100,
                     "status": 1  //1在线 0离线
-                }],
+                },
+                    {
+                        "id": 1,
+                        "name": "cac2",
+                        "used": 0,
+                        "capacity": 100,
+                        "status": 1  //1在线 0离线
+                    },
+                    {
+                        "id": 1,
+                        "name": "cac3",
+                        "used": 0,
+                        "capacity": 100,
+                        "status": 1  //1在线 0离线
+                    },{
+                        "id": 1,
+                        "name": "cac4",
+                        "used": 0,
+                        "capacity": 100,
+                        "status": 1  //1在线 0离线
+                    }],
                 poolid: 0,
                 totalPage:1,
                 polling:'',

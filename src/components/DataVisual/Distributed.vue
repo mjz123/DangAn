@@ -79,7 +79,26 @@
                     // children: 'children',
                     label: 'name'
                 },
-                poolMsg:{},
+                poolMsg:{
+                    poolName:[{
+                        capacity:100,
+                        used:0,
+                        name:'分布式1',
+                        free:100
+                    },
+                        {
+                            capacity:100,
+                            used:0,
+                            name:'分布式2',
+                            free:100
+                        },
+                        {
+                            capacity:100,
+                            used:10,
+                            name:'分布式3',
+                            free:90
+                        }]
+                },
                 idArray: [],
                 file:[],
                 folder:[],
@@ -94,9 +113,7 @@
 
                 this.tree.forEach( (item,index)=>{
                     this.idArray.push(item.id);
-
                 })
-                console.log(this.idArray)
 
                 // for (let i=0; i<idArray.length; i++){
                 //     console.log($('.el-tree-node__content')[0])
@@ -109,9 +126,8 @@
                     })
                 },500)
 
-
-                this.drawpie();
-                this.drawbar();
+                // this.drawpie();
+                // this.drawbar();
             });
 
             //获取跳转分布式后台路径
@@ -120,7 +136,10 @@
             });
         },
         mounted(){
+            this.drawpie();
+            this.drawbar();
             this.resize();
+
         },
         methods: {
             renderContent(h, { node, data, store }) {
@@ -170,7 +189,10 @@
                     ],
                     color: ['#CD919E','#CD8162','#CD6839','#CD5C5C','#CD2626'],
                     tooltip:{
-                        formatter:'磁带库名称:{b}'
+                        formatter:'存储池名称:{b}',
+                        textStyle:{
+                            fontSize:16
+                        }
                     }
                 };
 
@@ -213,17 +235,23 @@
                     },
                     legend: {
                         top:'5%',
-                        // data:['邮件营销','联盟广告','视频广告']
+                        textStyle:{
+                            fontSize:16
+                        },
                     },
                     tooltip: {},
                     dataset: {
                         dimensions: ['name', '剩余容量', '已用容量', '总容量'],
                         source:that.poolMsg.poolName
                     },
-                    label: {
-                        fontsize: 15
+                    xAxis: {
+                        type: 'category',
+                        axisLabel:{
+                            textStyle:{
+                                fontSize:16
+                            }
+                        }
                     },
-                    xAxis: {type: 'category'},
                     yAxis: {},
                     series: [
                         {type: 'bar'},

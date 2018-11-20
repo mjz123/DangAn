@@ -84,7 +84,7 @@
                 folder:[],
                 disk: [
                     {
-                        "name": "",
+                        "name": "光盘库",
                         "cpuType": "",
                         "cpuCount": "",
                         "memCapacity": "",
@@ -99,7 +99,7 @@
 
             this.$ajax.get(process.env.API_HOST + 'api/dashboard/disk/hosts').then((res) => {
                 this.$set(this.disk,0,res.data.disk[0]);
-                this.drawpie();
+
             });
 
             //跳转光盘库链接
@@ -107,6 +107,9 @@
                 this.url = res.data.weburl;
             });
 
+        },
+        mounted(){
+            this.drawpie();
         },
 
         methods: {
@@ -153,7 +156,10 @@
                     ],
                     color: ['#CD919E','#CD8162','#CD6839','#CD5C5C','#CD2626'],
                     tooltip:{
-                        formatter:'主机名:{b}'
+                        formatter:'主机名:{b}',
+                        textStyle:{
+                            fontSize:16
+                        }
                     }
                 };
 

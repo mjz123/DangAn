@@ -18,16 +18,16 @@
                             <div class="msg" v-show=show1>
                                 <div>
                                     <h4>分布式集群</h4>
-                                    <p>主机数量：1</p>
+                                    <p>主机数量：3</p>
                                 </div>
                             </div>
                             <div class="msg" v-show=!show1>
                                 <div>
                                     <h4>分布式集群</h4>
                                     <p>主机名称：分布式</p>
-                                    <p>CPU信息：{{host[0].cpu_type}}，{{host[0].cpucount}}个</p>
-                                    <p>内存信息：{{Math.ceil(host[0].mem_capacity/1024/1024/1024*100)/100}}GB</p>
-                                    <p>硬盘数量：1盘</p>
+                                    <p>CPU信息：phytium，8个</p>
+                                    <p>内存信息：16GB</p>
+                                    <p>硬盘数量：3盘</p>
                                     <p>在线状态：在线</p>
                                 </div>
                             </div>
@@ -44,7 +44,7 @@
                             <div class="msg" v-show=show2>
                                 <div>
                                     <h4>存储池状态</h4>
-                                    <p>存储池数量：1</p>
+                                    <p>存储池数量：3</p>
                                 </div>
                             </div>
                             <div class="msg" v-show=!show2>
@@ -110,12 +110,22 @@
                 show2: true,
                 show3:true,
                 colonyMsg:{
-                    "colonyCount": 1,
+                    "colonyCount": 3,
                     "colony": [{
                         "id": 1,
-                        "name": "分布式",
+                        "name": "分布式1",
                         "status": 1 //1在线 0离线
-                    }]
+                    },
+                        {
+                            "id": 1,
+                            "name": "分布式2",
+                            "status": 1 //1在线 0离线
+                        },
+                        {
+                            "id": 1,
+                            "name": "分布式3",
+                            "status": 1 //1在线 0离线
+                        }]
                 },
                 host: [
                     {
@@ -128,15 +138,31 @@
                      }
                  ],
                 poolMsg:{
-                    "poolCount": 1,
+                    "poolCount": 3,
                     "poolName": [{
-                        "name": "分布式存储池",
+                        "name": "分布式存储池1",
                         "id": 1,
                         "cpuType": " phytium",
                         "cpuCount": 2,
                         "memCapacity": 3.74,
                         "hardDiskCount": 3,
-                    }]
+                    },
+                        {
+                            "name": "分布式存储池2",
+                            "id": 1,
+                            "cpuType": " phytium",
+                            "cpuCount": 2,
+                            "memCapacity": 3.74,
+                            "hardDiskCount": 3,
+                        },
+                        {
+                            "name": "分布式存储池3",
+                            "id": 1,
+                            "cpuType": " phytium",
+                            "cpuCount": 2,
+                            "memCapacity": 3.74,
+                            "hardDiskCount": 3,
+                        }]
                 },
                 pool: [{
                     "name": "",
@@ -148,6 +174,28 @@
                 disk: [{
                     "id": 1,
                     "name": "qaq",
+                    "hostname": "分布式", //所属主机名
+                    "used": 0,
+                    "capacity": 100,
+                    "status": 1  //1在线 0离线
+                },{
+                    "id": 1,
+                    "name": "qaq2",
+                    "hostname": "分布式", //所属主机名
+                    "used": 0,
+                    "capacity": 100,
+                    "status": 1  //1在线 0离线
+                },{
+                    "id": 1,
+                    "name": "qaq3",
+                    "hostname": "分布式", //所属主机名
+                    "used": 0,
+                    "capacity": 100,
+                    "status": 1  //1在线 0离线
+                },
+                {
+                    "id": 1,
+                    "name": "qaq4",
                     "hostname": "分布式", //所属主机名
                     "used": 0,
                     "capacity": 100,

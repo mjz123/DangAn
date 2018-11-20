@@ -69,7 +69,6 @@
     }
     .msgbox span{
         margin-top: 5px;
-        font-size: 15px;
     }
     .msgbox img {
         box-sizing: content-box;

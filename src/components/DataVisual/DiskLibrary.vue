@@ -8,7 +8,7 @@
                         <div class="title">
                             磁带库存储
                         </div>
-                        <span class="tools" >
+                        <span class="tools">
                           <a class="fs1 icon-cog" aria-hidden="true" :href=url target="_blank"></a>
                         </span>
                     </div>
@@ -79,7 +79,14 @@
                     // children: 'children',
                     label: 'name'
                 },
-                poolMsg:{},
+                poolMsg:{
+                    poolName:[{
+                        capacity:100,
+                        used:0,
+                        name:'磁带库',
+                        free:100
+                    }]
+                },
                 idArray: [],
                 file:[],
                 folder:[],
@@ -107,8 +114,7 @@
                     })
                 },500);
 
-                this.drawpie();
-                this.drawbar();
+
             });
 
             this.$ajax.get(process.env.API_HOST + 'api/tape/jump').then(res => {
@@ -116,6 +122,8 @@
             });
         },
         mounted(){
+            this.drawpie();
+            this.drawbar();
             this.resize();
         },
         methods: {
@@ -168,7 +176,10 @@
                     ],
                     color: ['#CD919E','#CD8162','#CD6839','#CD5C5C','#CD2626'],
                     tooltip:{
-                        formatter:'磁带库名称:{b}'
+                        formatter:'磁带库名称:{b}',
+                        textStyle:{
+                            fontSize:16
+                        }
                     }
                 };
 
@@ -211,6 +222,9 @@
 
                     legend: {
                         top:'5%',
+                        textStyle:{
+                            fontSize:16
+                        },
                     },
                     tooltip: {},
                     dataset: {
@@ -220,7 +234,14 @@
                     label: {
                         fontsize: 15
                     },
-                    xAxis: {type: 'category'},
+                    xAxis: {
+                        type: 'category',
+                        axisLabel:{
+                            textStyle:{
+                                fontSize:16
+                            }
+                        }
+                    },
                     yAxis: {},
                     series: [
                         {type: 'bar'},
