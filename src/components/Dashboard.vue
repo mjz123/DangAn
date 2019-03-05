@@ -204,10 +204,16 @@
             // this.$ajax.get(process.env.API_HOST + 'api/dashboard/capacitystatus').then( res => {
             //     this.data = res.data.data[0];
             // });
+
             //分布式基本信息
             this.$ajax.get(process.env.API_HOST + 'api/distribute/capacitystatus').then( res => {
-                this.data.distcapacity = res.data.data.distcapacity;
-                this.data.distfree = res.data.data.distfree;
+                // this.data.distcapacity = res.data.data.distcapacity;
+                // this.data.distfree = res.data.data.distfree;
+                // let msg = res.data.data;
+                let { distcapacity, distfree } = res.data.data;
+                // let {distcapacity, distfree} = {distcapacity:msg.disdistcapacity,distfree:msg.distfree};
+                // let [distcapacity, distfree] = [msg.distcapacity,msg.distfree];
+                this.data = { distcapacity ,distfree };
             });
             //光盘库基本信息
             this.$ajax.get(process.env.API_HOST + 'api/optical/capacitystatus').then( res => {
@@ -219,22 +225,11 @@
                 this.data.tapecapacity = res.data.data.tapecapacity;
                 this.data.tapefree = res.data.data.tapefree;
             });
-            // this.$ajax.get(process.env.API_HOST + 'api/distribute/curcapacitystatus').then( res => {
-            //     this.devices[0].data = res.data.device[0]
-            // });
-            // this.$ajax.get(process.env.API_HOST + 'api/optical/curcapacitystatus').then( res => {
-            //     this.devices[2] = res.data.device[0];
-            //     console.log(this.devices[2].capacity);
-            // });
-            // this.$ajax.get(process.env.API_HOST + 'api/tape/curcapacitystatus').then( res => {
-            //     this.devices[1] = res.data.device[0]
-            // });
 
             //饼图信息
             this.$ajax.get(process.env.API_HOST + 'api/dashboard/curcapacitystatus')
                 .then( res => {
                     this.devices = res.data.device;
-                    console.log(this.devices);
                     this.drawpie();
                 })
                 .catch(() => {
@@ -298,7 +293,8 @@
                                     name:'光盘库存储',
                                     value:1,
                                     tooltip:{
-                                        formatter:'{b}</br> 总容量' + Math.ceil(that.devices[2].capacity*100)/100 +'T 可用容量' + Math.ceil(that.devices[2].usedCapacity*100)/100 +'T'
+                                        // formatter:'{b}</br> 总容量' + Math.ceil(that.devices[2].capacity*100)/100 +'T 可用容量' + Math.ceil(that.devices[2].usedCapacity*100)/100 +'T'
+                                        formatter:`{b}</br> 总容量${Math.ceil(that.devices[2].capacity*100)/100}T 可用容量${Math.ceil(that.devices[2].usedCapacity*100)/100}T`
                                     }
                                 },
                                 {
@@ -329,7 +325,10 @@
                 };
 
                 pie.setOption(option);
-                window.onresize = function() {
+                // window.onresize = function() {
+                //     pie.resize();
+                // }
+                window.onresize = () => {
                     pie.resize();
                 }
             },

@@ -24,7 +24,7 @@
                                 <div class="msgbox">
                                     <img src="../assets/img/1.png"/>
                                     <span>文档</span>
-                                    <span>用户手册下载</span>
+                                    <a :href="url">用户手册下载</a>
                                 </div>
                             </div>
                         </div>
@@ -37,7 +37,12 @@
 
 <script>
     export default {
-        name: "Help"
+        name: "Help",
+        data(){
+            return{
+                url:'http://'+ location.hostname + ':6789/bangzhu/融合存储使用手册-V3.0.pdf'
+            }
+        },
     }
 </script>
 
@@ -48,7 +53,7 @@
         background-position: center;
         background-size: cover;
     }
-    .msg img{
+    .msg img {
         width: 40px;
         box-shadow:0 3px 10px rgba(0, 0, 0, .1);
         border-radius: 50%;

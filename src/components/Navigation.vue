@@ -47,7 +47,7 @@
          <div class="headerDiv">
              <!--左侧logo展示-->
              <div class="logoimg"><img src="../assets/img/logo.png"/></div>
-             <div class="logotext">自主可控多介质存储管理系统</div>
+             <div class="logotext">多介质融合存储系统</div>
          </div>
          <!--------头部信息结束------------->
          <div class="menus">

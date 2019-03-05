@@ -577,12 +577,10 @@
                 if(this.show2 === true){
                     this.$ajax.get(process.env.API_HOST + 'api/dashboard/disk/disks?page_num='+ val +'&count=5').then((res) => {
                         this.diskPage = res.data.disk;
-                        this.totalPage = Number(res.data.totalPage);
                     });
                 } else {
                     this.$ajax.get(process.env.API_HOST + 'api/dashboard/disk/pool/disks?poolid='+ this.poolid +'&page_num='+ val +'&count=5') .then( res =>{
                         this.diskPage = res.data.disk;
-                        this.totalPage = Number(res.data.totalPage);
                     });
                 }
             },

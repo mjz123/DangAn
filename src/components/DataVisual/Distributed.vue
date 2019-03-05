@@ -87,14 +87,13 @@
             };
         },
         created(){
-            this.$ajax.get(process.env.API_HOST + 'api/dashboard/distribute/pools').then((res) => {
+            this.$ajax.get(process.env.API_HOST + 'api/dashboard/distribute/pools').then(res => {
                 console.log(res.data);
                 this.poolMsg = res.data;
                 this.tree = res.data.poolName;
 
                 this.tree.forEach( (item,index)=>{
                     this.idArray.push(item.id);
-
                 })
                 console.log(this.idArray)
 

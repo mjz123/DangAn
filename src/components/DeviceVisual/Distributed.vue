@@ -344,7 +344,7 @@
                 let ram = [5];
                 let bw = [5];
 
-                var that = this;
+                const that = this;
                 if (status === 1){
                     const socket = new SockJS( '/websocket_entry');
                     this.stompClient = Stomp.over(socket);

@@ -139,7 +139,7 @@
             //集群信息状态下获取分布式存储系统磁盘列表
             this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/disks?page_num=1&count=5').then((res) => {
                 this.disk = res.data.disk;
-                this.totalPage = Number(res.data.totalPage);
+                this.totalPage = res.data.totalPage;
             });
 
             //跳转到磁带库后台
@@ -277,6 +277,7 @@
                                 });
                                 this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/pool/disks?poolid='+ this.poolid +'&page_num=1&count=5') .then( res =>{
                                     this.disk = res.data.disk;
+                                    this.totalPage = res.data.totalPage;
                                 });
                             } else {
 
@@ -284,11 +285,12 @@
                                 if (this.show2 == true) {
                                     this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/disks?page_num=1&count=5').then((res) => {
                                         this.disk = res.data.disk;
-                                        this.totalPage = Number(res.data.totalPage);
+                                        this.totalPage = res.data.totalPage;
                                     });
                                 } else {
                                     this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/pool/disks?poolid='+ this.poolid +'&page_num=1&count=5') .then( res =>{
                                         this.disk = res.data.disk;
+                                        this.totalPage = res.data.totalPage;
                                     });
                                 }
                             }
@@ -592,12 +594,10 @@
                 if(this.show2 === true){
                     this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/disks?page_num='+ val +'&count=5').then((res) => {
                         this.disk = res.data.disk;
-                        this.totalPage = Number(res.data.totalPage);
                     });
                 } else {
                     this.$ajax.get(process.env.API_HOST + 'api/dashboard/tape/pool/disks?poolid='+ this.poolid +'&page_num='+ val +'&count=5') .then( res =>{
                         this.disk = res.data.disk;
-                        this.totalPage = Number(res.data.totalPage);
                     });
                 }
             },
