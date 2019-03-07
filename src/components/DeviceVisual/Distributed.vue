@@ -24,8 +24,8 @@
                             <div class="msg" v-show=!show1>
                                 <div>
                                     <h4>分布式集群</h4>
-                                    <p>主机名称：{{host[0].name}}</p>
-                                    <p>CPU信息：{{host[0].cpu_type}}，{{host[0].cpucount}}个</p>
+                                    <p>主机名称：node</p>
+                                    <p>CPU信息：Loongson-3B3000，1个</p>
                                     <p>内存信息：{{Math.ceil(host[0].mem_capacity/1024/1024/1024*100)/100}}GB</p>
                                     <p>硬盘数量：{{host[0].disk_count-1}}盘</p>
                                     <p>在线状态：{{host[0].status | status}}</p>
@@ -109,7 +109,24 @@
                 show1: true,
                 show2: true,
                 show3:true,
-                colonyMsg:{},
+                colonyMsg:{
+                    "colonyCount": 3,
+                    "colony": [{
+                        "id": 1,
+                        "name": "node01",
+                        "status": 1   //1在线 0离线
+                    },
+                        {
+                            "id": 1,
+                            "name": "node02",
+                            "status": 1   //1在线 0离线
+                        },
+                        {
+                            "id": 1,
+                            "name": "node03",
+                            "status": 1   //1在线 0离线
+                        }]
+                },
                 host: [
                     {
                         "name": "",
@@ -139,11 +156,11 @@
         },
         created(){
             //获取分布式存储系统集群情况
-            this.$ajax.get(process.env.API_HOST + 'api/device/distribute/hosts').then((res) => {
-                this.colonyMsg = res.data;
-                this.drawpie1();
-            });
-
+            // this.$ajax.get(process.env.API_HOST + 'api/device/distribute/hosts').then((res) => {
+            //     this.colonyMsg = res.data;
+            //
+            // });
+            this.drawpie1();
             //获取分布式存储系统存储池总体概况
             this.$ajax.get(process.env.API_HOST + 'api/dashboard/distribute/pools').then((res) => {
                 this.poolMsg = res.data;
