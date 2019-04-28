@@ -116,7 +116,7 @@
                                                 </td>
                                                 <td class="hidden-phone">
                                                     <span class="label" :class="{'label-success': !warningMsg[2].status, 'label-warning': warningMsg[2].status}">
-                                                        {{warningMsg[2].status | status}}
+                                                        异常
                                                     </span>
                                                 </td>
                                             </tr>
@@ -126,7 +126,7 @@
                                                 </td>
                                                 <td class="hidden-phone">
                                                     <span class="label" :class="{'label-success': !warningMsg[0].status, 'label-warning': warningMsg[0].status}">
-                                                        {{warningMsg[0].status | status}}
+                                                        异常
                                                     </span>
                                                 </td>
                                                 <!--<td class="hidden-phone">-->
